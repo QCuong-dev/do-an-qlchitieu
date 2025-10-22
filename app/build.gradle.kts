@@ -29,6 +29,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    buildFeatures {
+        dataBinding = true
+    }
+
 }
 
 dependencies {
@@ -37,7 +42,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.impress)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    //BottomNavigation
+    implementation("com.github.Foysalofficial:NafisBottomNav:5.0")
+    //Login with google
+//    implementation("com.github.TutorialsAndroid:GButton:v1.0.19")
+//    implementation("com.google.android.gms:play-services-auth:20.4.0")
+
 }
