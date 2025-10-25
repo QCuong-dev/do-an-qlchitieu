@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QLChiTieu">
         <activity
+            android:name=".setting"
+            android:exported="false" />
+        <activity
+            android:name=".calendar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".SignupActivity"
             android:exported="false" />
         <activity
@@ -22,13 +34,7 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

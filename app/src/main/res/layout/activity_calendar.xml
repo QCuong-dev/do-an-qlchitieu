@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    tools:context=".MainActivity">
+
+    <!-- 1. Nội dung chính có thể cuộn -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"> <!-- Chừa không gian cho Bottom Nav -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 1.1. Thanh điều hướng Tháng/Năm -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@color/design_default_color_primary">
+
+                <ImageView
+                    android:id="@+id/ivBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/chevron_left"
+                    app:tint="@android:color/white"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:contentDescription="Tháng trước"/>
+
+                <TextView
+                    android:id="@+id/tvMonthYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="tháng 12 năm 2022"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@id/ivBack"
+                    app:layout_constraintEnd_toStartOf="@id/ivForward"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/ivForward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/chevron_right"
+                    app:tint="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:contentDescription="Tháng sau"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- 1.2. Lịch (Giả lập) -->
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="@android:color/white"
+                android:stretchColumns="*">
+                <!-- ... (Các TableRow cho lịch như code trước) ... -->
+                <TableRow android:paddingBottom="8dp">
+                    <TextView android:text="Th 2" android:gravity="center" android:textStyle="bold"/>
+                    <TextView android:text="Th 3" android:gravity="center" android:textStyle="bold"/>
+                    <TextView android:text="Th 4" android:gravity="center" android:textStyle="bold"/>
+                    <TextView android:text="Th 5" android:gravity="center" android:textStyle="bold"/>
+                    <TextView android:text="Th 6" android:gravity="center" android:textStyle="bold"/>
+                    <TextView android:text="Sat" android:gravity="center" android:textStyle="bold" android:textColor="#FF0000"/>
+                    <TextView android:text="Sun" android:gravity="center" android:textStyle="bold" android:textColor="#FF0000"/>
+                </TableRow>
+                <TableRow>
+                    <TextView android:text="" android:padding="8dp" android:gravity="center"/>
+                    <TextView android:text="" android:padding="8dp" android:gravity="center"/>
+                    <TextView android:text="" android:padding="8dp" android:gravity="center"/>
+                    <TextView android:text="1" android:padding="8dp" android:gravity="center"/>
+                    <TextView
+                        android:text="2"
+                        android:padding="8dp"
+                        android:gravity="center" />
+                    <TextView android:text="3" android:padding="8dp" android:gravity="center"/>
+                    <TextView android:text="4" android:padding="8dp" android:gravity="center"/>
+                </TableRow>
+            </TableLayout>
+
+            <!-- 1.3. Thanh Tóm tắt -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@android:color/white"
+                android:layout_marginTop="8dp"
+                android:weightSum="3">
+                <!-- ... (Code cho Thu Nhập, Chi Tiêu, Tổng như code trước) ... -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thu Nhập"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1.000.000 VND" android:textColor="#0000FF" android:textStyle="bold"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chi Tiêu"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-450.000 VND" android:textColor="#FF0000" android:textStyle="bold"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tổng"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="550.000 VND" android:textColor="#008000" android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 1.4. Danh sách giao dịch -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_transaction"
+                tools:itemCount="4"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 2. BOTTOM NAVIGATION CỦA BẠN (Đã sửa lỗi) -->
+    <!--
+        - Đặt bên ngoài NestedScrollView
+        - Dùng android:layout_gravity="bottom" để neo nó xuống đáy
+        - Xóa app:layout_constraintTop_toBottomOf
+        - Đổi chiều cao của RelativeLayout thành wrap_content
+    -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <com.nafis.bottomnavigation.NafisBottomNavigation
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mbn_circleColor="#ffffff"
+            app:mbn_backgroundBottomColor="#ffffff"
+            app:mbn_countBackgroundColor="#ff6f00"
+            app:mbn_countTextColor="#ffffff"
+            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"
+            app:mbn_defaultIconColor="#90a4ae"
+            app:mbn_rippleColor="#2f424242"
+            app:mbn_selectedIconColor="#3c415e"
+            app:mbn_shadowColor="#1f212121"
+            app:mbn_hasAnimation="true"
+            />
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
