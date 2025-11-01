@@ -16,7 +16,15 @@
             android:exported="false" />
         <activity
             android:name=".calendar"
-            android:exported="true">
+            android:exported="false">
+
+        </activity>
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SigninActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,17 +32,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SigninActivity"
-            android:exported="false" />
-        <activity
             android:name=".home"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

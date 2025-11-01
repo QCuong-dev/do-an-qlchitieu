@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -14,6 +16,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String","GOOGLE_CLIENT_ID","\"${project.findProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
     }
 
     buildTypes {
@@ -32,6 +35,8 @@ android {
 
     buildFeatures {
         dataBinding = true
+        viewBinding = true
+        buildConfig = true
     }
 
 }
@@ -49,7 +54,5 @@ dependencies {
     //BottomNavigation
     implementation("com.github.Foysalofficial:NafisBottomNav:5.0")
     //Login with google
-//    implementation("com.github.TutorialsAndroid:GButton:v1.0.19")
-//    implementation("com.google.android.gms:play-services-auth:20.4.0")
-
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
