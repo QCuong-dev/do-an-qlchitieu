@@ -2,6 +2,9 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.android.application)
+
+    // Add Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -55,4 +58,10 @@ dependencies {
     implementation("com.github.Foysalofficial:NafisBottomNav:5.0")
     //Login with google
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation ("com.google.firebase:firebase-auth")
+    implementation ("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-analytics")
 }

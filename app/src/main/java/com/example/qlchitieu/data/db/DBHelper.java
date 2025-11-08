@@ -21,21 +21,88 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db){
         // Bật hỗ trợ Foreign Key
         db.execSQL("PRAGMA foreign_keys = ON;");
-        // Tạo bảng
+
+        // ===== TẠO BẢNG USER =====
         db.execSQL("CREATE TABLE IF NOT EXISTS User (" +
-                "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "    name TEXT NOT NULL," +
-                "    age TEXT NOT NULL," +
-                "    email TEXT NOT NULL," +
-                "    username TEXT NOT NULL UNIQUE," +
-                "    password TEXT NOT NULL," +
-                "    created_at TEXT NOT NULL" +
-                ");"); // USER
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT NOT NULL, " +
+                "birth_date TEXT NOT NULL, " +
+                "email TEXT NOT NULL UNIQUE, " +
+                "username TEXT, " +
+                "password TEXT, " +
+                "created_at TEXT DEFAULT CURRENT_DATE, " +
+                "is_synced INTEGER DEFAULT 0" +
+                ");");
+
+        // ===== TẠO BẢNG WALLET =====
+        db.execSQL("CREATE TABLE IF NOT EXISTS Wallet (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "wallet_name TEXT NOT NULL, " +
+                "balance REAL NOT NULL DEFAULT 0, " +
+                "currency TEXT NOT NULL DEFAULT 'VND', " +
+                "is_synced INTEGER DEFAULT 0, " +
+                "FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE" +
+                ");");
+
+        // ===== TẠO BẢNG CATEGORY =====
+        db.execSQL("CREATE TABLE IF NOT EXISTS Category (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "name TEXT NOT NULL, " +
+                "type TEXT CHECK (type IN ('income', 'expense')) NOT NULL DEFAULT 'expense', " +
+                "icon INTEGER, " +
+                "is_synced INTEGER DEFAULT 0, " +
+                "FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE" +
+                ");");
+
+        // ===== TẠO BẢNG TRANSACTION =====
+        db.execSQL("CREATE TABLE IF NOT EXISTS `Transaction` (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "wallet_id INTEGER NOT NULL, " +
+                "category_id INTEGER NOT NULL, " +
+                "amount REAL NOT NULL, " +
+                "note TEXT, " +
+                "date TEXT NOT NULL, " +
+                "type TEXT CHECK (type IN ('income', 'expense')) NOT NULL, " +
+                "created_at TEXT DEFAULT CURRENT_DATE, " +
+                "is_synced INTEGER DEFAULT 0, " +
+                "FOREIGN KEY(wallet_id) REFERENCES Wallet(id) ON DELETE CASCADE, " +
+                "FOREIGN KEY(category_id) REFERENCES Category(id) ON DELETE CASCADE" +
+                ");");
+
+        // ===== TẠO BẢNG BUDGET =====
+        db.execSQL("CREATE TABLE IF NOT EXISTS Budget (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "category_id INTEGER NOT NULL, " +
+                "amount_limit REAL NOT NULL, " +
+                "start_date TEXT NOT NULL, " +
+                "end_date TEXT NOT NULL, " +
+                "is_synced INTEGER DEFAULT 0, " +
+                "FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE, " +
+                "FOREIGN KEY(category_id) REFERENCES Category(id) ON DELETE CASCADE" +
+                ");");
+
+        // ===== TẠO BẢNG ATTACHMENT =====
+        db.execSQL("CREATE TABLE IF NOT EXISTS Attachment (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "transaction_id INTEGER NOT NULL, " +
+                "file_path TEXT NOT NULL, " +
+                "created_at TEXT DEFAULT CURRENT_DATE, " +
+                "is_synced INTEGER DEFAULT 0, " +
+                "FOREIGN KEY(transaction_id) REFERENCES `Transaction`(id) ON DELETE CASCADE" +
+                ");");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS User");
+        db.execSQL("DROP TABLE IF EXISTS Attachment;");
+        db.execSQL("DROP TABLE IF EXISTS Budget;");
+        db.execSQL("DROP TABLE IF EXISTS `Transaction`;");
+        db.execSQL("DROP TABLE IF EXISTS Category;");
+        db.execSQL("DROP TABLE IF EXISTS Wallet;");
+        db.execSQL("DROP TABLE IF EXISTS User;");
         onCreate(db);
     }
 }

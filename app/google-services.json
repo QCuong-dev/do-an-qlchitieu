@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "683874500139",
+    "project_id": "do-an-lap-trinh-mobile",
+    "storage_bucket": "do-an-lap-trinh-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683874500139:android:c6544e2cbbfc742dc1746e",
+        "android_client_info": {
+          "package_name": "com.example.qlchitieu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCLtxNzzNKKYX8cSrDZyg8GGS0SfkzzHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
