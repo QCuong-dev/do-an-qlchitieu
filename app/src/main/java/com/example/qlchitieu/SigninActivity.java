@@ -64,35 +64,35 @@ public class SigninActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_SIGN_IN){
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try{
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
-            }catch (ApiException e){
-                Toast.makeText(this, "Login Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if(requestCode == RC_SIGN_IN){
+//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+//            try{
+//                GoogleSignInAccount account = task.getResult(ApiException.class);
+//                firebaseAuthWithGoogle(account);
+//            }catch (ApiException e){
+//                Toast.makeText(this, "Login Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                        Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-
-                        // 4️⃣ Lưu thông tin user vào Firestore
-                        UserController userController = new UserController(this);
-                        userController.handleGoogleLogin(firebaseUser);
-
-                        // Chuyển sang MainActivity
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(this, "Xác thực Firebase thất bại!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+//        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, task -> {
+//                    if (task.isSuccessful()) {
+//                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+//                        Toast.makeText(this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
+//
+//                        // 4️⃣ Lưu thông tin user vào Firestore
+//                        UserController userController = new UserController(this);
+//                        userController.handleGoogleLogin(firebaseUser);
+//
+//                        // Chuyển sang MainActivity
+//                        startActivity(new Intent(this, MainActivity.class));
+//                        finish();
+//                    } else {
+//                        Toast.makeText(this, "Xác thực Firebase thất bại!", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 }

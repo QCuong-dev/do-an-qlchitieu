@@ -1,4 +1,10 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
+
+val properties = Properties();
+val localPropertiesFile = project.rootProject.file("local.properties");
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream());
+}
 
 plugins {
     alias(libs.plugins.android.application)
@@ -19,7 +25,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String","GOOGLE_CLIENT_ID","\"${project.findProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
+        buildConfigField("String","GOOGLE_CLIENT_ID","\"${properties.getProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
     }
 
     buildTypes {
