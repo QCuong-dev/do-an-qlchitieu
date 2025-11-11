@@ -1,14 +1,17 @@
 package com.example.qlchitieu.controller;
 
 import com.example.qlchitieu.data.db.dao.BaseDAO;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public abstract class BaseController<T> {
     protected BaseDAO<T> dao;
+    protected FirebaseFirestore firebaseDB;
 
     public BaseController(BaseDAO<T> dao){
         this.dao = dao;
+        this.firebaseDB = FirebaseFirestore.getInstance();
     }
 
     public long insert(T entity){

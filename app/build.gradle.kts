@@ -7,11 +7,19 @@ if (localPropertiesFile.exists()) {
 }
 
 plugins {
-    alias(libs.plugins.android.application)
+//    alias(libs.plugins.android.application)
 
+    id("com.android.application")
     // Add Google services Gradle plugin
     id("com.google.gms.google-services")
 }
+
+buildscript {
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.4")
+    }
+}
+
 
 android {
     namespace = "com.example.qlchitieu"
@@ -69,5 +77,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
