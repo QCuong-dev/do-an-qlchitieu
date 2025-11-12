@@ -3,6 +3,7 @@ package com.example.qlchitieu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -49,6 +50,21 @@ public class SigninActivity extends AppCompatActivity {
 
         // 🔹 Bắt sự kiện khi bấm nút đăng nhập Google
         binding.btnGoogleSignIn.setOnClickListener(v -> signInWithGoogle());
+
+        // Handle login demo
+        binding.btnSignin.setOnClickListener(v -> signinWithEmailAndPassword());
+    }
+
+    private void signinWithEmailAndPassword() {
+        String email = binding.etEmail.getText().toString();
+        String password = binding.etPassword.getText().toString();
+
+        if(binding.etEmail.getText().toString().equals("dung@gmail.com") && binding.etPassword.getText().toString().equals("123")){
+            Toast.makeText(SigninActivity.this, "Login success", Toast.LENGTH_SHORT).show();
+            setContentView(R.layout.activity_home);
+        }
+        else
+            Toast.makeText(SigninActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
     }
 
     private void signInWithGoogle() {
