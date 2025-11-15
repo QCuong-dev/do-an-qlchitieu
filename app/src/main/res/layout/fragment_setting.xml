@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="#F5F5F5">
 
     <androidx.core.widget.NestedScrollView
@@ -352,26 +353,26 @@
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom">-->
 
-        <com.nafis.bottomnavigation.NafisBottomNavigation
-            android:id="@+id/bottomNavigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:mbn_circleColor="#ffffff"
-            app:mbn_backgroundBottomColor="#ffffff"
-            app:mbn_countBackgroundColor="#ff6f00"
-            app:mbn_countTextColor="#ffffff"
-            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"
-            app:mbn_defaultIconColor="#90a4ae"
-            app:mbn_rippleColor="#2f424242"
-            app:mbn_selectedIconColor="#3c415e"
-            app:mbn_shadowColor="#1f212121"
-            app:mbn_hasAnimation="true"
-            />
-    </RelativeLayout>
+<!--        <com.nafis.bottomnavigation.NafisBottomNavigation-->
+<!--            android:id="@+id/bottomNavigation"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:mbn_circleColor="#ffffff"-->
+<!--            app:mbn_backgroundBottomColor="#ffffff"-->
+<!--            app:mbn_countBackgroundColor="#ff6f00"-->
+<!--            app:mbn_countTextColor="#ffffff"-->
+<!--            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"-->
+<!--            app:mbn_defaultIconColor="#90a4ae"-->
+<!--            app:mbn_rippleColor="#2f424242"-->
+<!--            app:mbn_selectedIconColor="#3c415e"-->
+<!--            app:mbn_shadowColor="#1f212121"-->
+<!--            app:mbn_hasAnimation="true"-->
+<!--            />-->
+<!--    </RelativeLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

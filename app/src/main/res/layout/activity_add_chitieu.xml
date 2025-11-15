@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="#f5f5f5"
     android:fitsSystemWindows="true"
-    tools:context=".AddChitieuActivity">
+    tools:context=".Activites.AddChitieuActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

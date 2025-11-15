@@ -1,14 +1,14 @@
-package com.example.qlchitieu;
+package com.example.qlchitieu.Activites;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.qlchitieu.R;
 import com.example.qlchitieu.controller.UserController;
 import com.example.qlchitieu.databinding.ActivitySigninBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -53,15 +53,32 @@ public class SigninActivity extends AppCompatActivity {
 
         // Handle login demo
         binding.btnSignin.setOnClickListener(v -> signinWithEmailAndPassword());
+
+        // Handle Forgot Password
+        binding.tvForgotpassword.setOnClickListener(v -> eventForgopass());
+
+        //Handle Register
+        binding.tvSignUp.setOnClickListener(v -> eventRegister());
+
+
+    }
+
+    private void eventRegister(){
+        Intent intent = new Intent(SigninActivity.this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+    private  void eventForgopass(){
+        Intent intent = new Intent(SigninActivity.this, ForgotPasswordActivity.class);
+        startActivity(intent);
+
     }
 
     private void signinWithEmailAndPassword() {
-        String email = binding.etEmail.getText().toString();
-        String password = binding.etPassword.getText().toString();
-
         if(binding.etEmail.getText().toString().equals("dung@gmail.com") && binding.etPassword.getText().toString().equals("123")){
             Toast.makeText(SigninActivity.this, "Login success", Toast.LENGTH_SHORT).show();
-            setContentView(R.layout.activity_home);
+            Intent intent = new Intent(SigninActivity.this, MainActivity.class);
+            startActivity(intent);
         }
         else
             Toast.makeText(SigninActivity.this, "Login failed", Toast.LENGTH_SHORT).show();

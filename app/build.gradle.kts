@@ -34,6 +34,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String","GOOGLE_CLIENT_ID","\"${properties.getProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
+
+        // Lấy key từ local.properties và gán vào BuildConfig
+        buildConfigField("String", "GEMINI_API_KEY", properties.getProperty("GEMINI_API_KEY") ?: "")
     }
 
     buildTypes {
@@ -48,6 +51,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+
+        isCoreLibraryDesugaringEnabled = true
     }
 
     buildFeatures {
@@ -65,9 +70,13 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.impress)
+    implementation(libs.generativeai)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4") // Hoặc phiên bản mới hơn
+
     //BottomNavigation
     implementation("com.github.Foysalofficial:NafisBottomNav:5.0")
     //Login with google
@@ -78,4 +87,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Thư viện Google AI (Gemini)
+//    implementation("com.google.ai.client:generativeai:0.6.0")
+    implementation("com.google.guava:guava:33.2.1-android")
+
 }

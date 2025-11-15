@@ -1,141 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
-    android:padding="24dp"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
+    tools:context=".Activites.MainActivity">
 
-    <LinearLayout
+    <!-- BƯỚC 1: THÊM CONTAINER CHO FRAGMENT -->
+    <!-- Đây là khu vực để hiển thị nội dung của HomeFragment, CalendarFragment, ... -->
+    <androidx.fragment.app.FragmentContainerView
+
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNavigation" />
+
+    <!-- BƯỚC 2: ĐẶT BOTTOM NAVIGATION Ở DƯỚI CÙNG -->
+    <!-- Tôi giả định bạn đã có View này, hãy đảm bảo nó có ID là bottomNavigation -->
+    <com.nafis.bottomnavigation.NafisBottomNavigation
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="300dp"
-            android:layout_height="150dp">
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:src="@drawable/mainlogo" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="68dp"
-                android:layout_marginTop="117dp"
-                android:layout_marginEnd="56dp"
-                android:gravity="center"
-                android:text="Please Log-In to continue"
-                android:textAlignment="center"
-                android:textColor="#777777"
-                android:textSize="14sp" />
-        </RelativeLayout>
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="40dp"
-            android:hint="Email Address"
-            android:padding="12dp"
-            android:background="@drawable/edittext_bg"
-            android:inputType="textEmailAddress" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <EditText
-                android:id="@+id/edtPassword"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Password"
-                android:background="@drawable/edittext_bg"
-                android:padding="12dp"
-                android:inputType="textPassword" />
-
-            <TextView
-                android:id="@+id/tvForgot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="12dp"
-                android:text="Forgot!"
-                android:textColor="#5D5FEF"
-                android:textStyle="bold"
-                android:textSize="13sp" />
-        </RelativeLayout>
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="#5D5FEF"
-            android:text="Log In"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/btn_rounded"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Don’t have an account?"
-                android:textColor="#777777"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/tvSignUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" Sign-Up"
-                android:textColor="#2CD4D9"
-                android:textStyle="bold"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
-
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:id="@+id/main"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".home">-->
-
-<!--    <com.nafis.bottomnavigation.NafisBottomNavigation-->
-<!--        android:id="@+id/bottomNavigation"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        app:mbn_countBackgroundColor="#ff6f00"-->
-<!--        app:mbn_countTextColor="#ffffff"-->
-<!--        app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"-->
-<!--        app:mbn_defaultIconColor="#90a4ae"-->
-<!--        app:mbn_hasAnimation="true"-->
-<!--        app:mbn_rippleColor="#2f424242"-->
-<!--        app:mbn_selectedIconColor="#3c415e"-->
-<!--        app:mbn_shadowColor="#1f212121" />-->
-
-<!--</RelativeLayout>-->
+</RelativeLayout>
