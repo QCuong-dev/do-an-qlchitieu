@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#F9FAFB"
-    tools:context=".Activites.HomeActivity">
+    android:background="#F9FAFB">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize">
+       >
 
         <!-- LinearLayout chính, xếp chồng các thành phần theo chiều dọc -->
         <LinearLayout
@@ -74,26 +73,10 @@
                         tools:ignore="RtlSymmetry">
 
                         <ImageView
-                            android:id="@+id/btn_star"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_star"
-                            android:padding="8dp"
-                            tools:ignore="ContentDescription" />
-
-                        <ImageView
                             android:id="@+id/btn_headset"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_headset"
-                            android:padding="8dp"
-                            tools:ignore="ContentDescription" />
-
-                        <ImageView
-                            android:id="@+id/btn_close"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_close"
                             android:padding="8dp"
                             tools:ignore="ContentDescription" />
                     </LinearLayout>
@@ -151,6 +134,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:id="@+id/btnThuChiTheoThang"
                         android:orientation="vertical"
                         android:gravity="center">
                         <ImageView
@@ -159,17 +143,19 @@
                             android:src="@drawable/ic_action_chart"
                             android:padding="12dp"
                             tools:ignore="ContentDescription" />
+
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="133dp"
                             android:layout_height="wrap_content"
-                            android:text="Biến động\nthu chi"
+                            android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:textSize="15sp"
-                            android:layout_marginTop="4dp"/>
+                            android:text="Biến động\nthu chi theo tháng"
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                     <!-- Nút 3: Giao dịch định kỳ -->
                     <LinearLayout
+                        android:id="@+id/btnGiaoDichDinhKy"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -192,6 +178,7 @@
 
                     <!-- Nút 4: Tiện ích khác -->
                     <LinearLayout
+                        android:id="@+id/btnTienichkhac"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -257,11 +244,15 @@
                     android:layout_marginTop="16dp">
 
                     <ImageView
+                        android:id="@+id/ivMonthPrev"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/chevron_left"
-                        tools:ignore="ContentDescription" />
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        tools:ignore="ContentDescription"/>
                     <TextView
+                        android:id="@+id/tvCurrentMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tháng này"
@@ -271,9 +262,12 @@
                         android:layout_marginEnd="16dp"
                         />
                     <ImageView
+                        android:id="@+id/ivMonthNext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/chevron_right"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         tools:ignore="ContentDescription" />
                 </LinearLayout>
 
@@ -305,6 +299,7 @@
                                 android:drawableStart="@drawable/ic_expense"
                                 android:drawablePadding="8dp"/>
                             <TextView
+                                android:id="@+id/tvTotalExpense"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1,000,000"
@@ -334,6 +329,7 @@
                                 android:drawableStart="@drawable/ic_income"
                                 android:drawablePadding="8dp"/>
                             <TextView
+                                android:id="@+id/tvTotalIncome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="10,000,000"
@@ -388,12 +384,16 @@
             </LinearLayout>
 
             <!-- 4. Biểu đồ Bar Chart (Placeholder) -->
-            <View
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:background="#E0E0E0"-->
+<!--                android:layout_margin="16dp"-->
+<!--                android:contentDescription="Placeholder cho Bar Chart"/>-->
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="#E0E0E0"
-                android:layout_margin="16dp"
-                android:contentDescription="Placeholder cho Bar Chart"/>
+                android:layout_height="300dp" />
 
 
 

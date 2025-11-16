@@ -165,7 +165,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
 
         // SỬA LỖI: Dùng 'this' (cho Listener) và 'requireContext()' (cho Context)
-        calendarAdapter = new CalendarAdapter(daysInMonth, this); // 'this' vì Fragment này implement OnItemListener
+        calendarAdapter = new CalendarAdapter(daysInMonth, this, selectedDate); // 'this' vì Fragment này implement OnItemListener
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(requireContext(), 7);
         binding.calendarRecyclerView.setLayoutManager(layoutManager);
         binding.calendarRecyclerView.setAdapter(calendarAdapter);

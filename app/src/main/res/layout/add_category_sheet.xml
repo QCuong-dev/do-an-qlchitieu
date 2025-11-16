@@ -19,6 +19,7 @@
 
         <ImageView
         android:id="@+id/ivBack"
+            android:onClick="backToAddChitieu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/chevron_left"
@@ -52,6 +53,7 @@
 
     <Button
         android:id="@+id/btnSave"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lưu"

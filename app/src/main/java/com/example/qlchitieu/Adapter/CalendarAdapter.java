@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.qlchitieu.CalendarViewHolder;
 import com.example.qlchitieu.R;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
@@ -21,9 +22,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private final OnItemListener onItemListener;
     private int selectedPosition = RecyclerView.NO_POSITION;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener) {
+    private final LocalDate today;
+    private final LocalDate selectedDate; // Tháng/năm đang được hiển thị
+
+    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener, LocalDate selectedDate) {
         this.daysOfMonth = daysOfMonth;
         this.onItemListener = onItemListener;
+        this.selectedDate = selectedDate;
+        this.today = LocalDate.now();
     }
 
     @NonNull
@@ -38,27 +44,42 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
-//        holder.dayOfMonth.setText(daysOfMonth.get(position));
         String dayText = daysOfMonth.get(position);
         holder.dayOfMonth.setText(dayText);
 
-        // 2. Logic để xử lý ô trống và ô được chọn
-        if(dayText.equals("")) {
-            // Nếu là ô trống, ẩn đi và không cho click
+        if (dayText.equals("")) {
+            // Ô trống
+            holder.dayOfMonth.setBackground(null);
             holder.itemView.setClickable(false);
-            holder.dayOfMonth.setBackground(null); // Xóa mọi background
         } else {
-            // Nếu là ô có ngày
+            // Ô có ngày
             holder.itemView.setClickable(true);
+            int day = Integer.parseInt(dayText);
 
-            if(position == selectedPosition) {
-                // Nếu là ô ĐƯỢC CHỌN
-                holder.dayOfMonth.setBackgroundResource(R.drawable.selected_day_background); // Set nền xám
-                holder.dayOfMonth.setTextColor(Color.WHITE); // Set chữ màu trắng
-            } else {
-                // Nếu là ô KHÔNG ĐƯỢC CHỌN
-                holder.dayOfMonth.setBackground(null); // Xóa background (quay về mặc định)
-                holder.dayOfMonth.setTextColor(Color.BLACK); // Set chữ màu đen (mặc định)
+            // 1. Kiểm tra xem có phải "hôm nay" không
+            boolean isToday = today.getYear() == selectedDate.getYear() &&
+                    today.getMonth() == selectedDate.getMonth() &&
+                    today.getDayOfMonth() == day;
+
+            // 2. Kiểm tra xem có phải "đang được chọn" (click) không
+            boolean isSelected = (position == selectedPosition);
+
+
+            // 3. Áp dụng style (Ưu tiên "Selected" > "Today" > "Normal")
+            if (isSelected) {
+                // Nếu là ô ĐƯỢC CHỌN (đè lên cả style "hôm nay")
+                holder.dayOfMonth.setBackgroundResource(R.drawable.selected_day_background); // Giả sử bạn có file này
+                holder.dayOfMonth.setTextColor(Color.WHITE);
+            }
+            else if (isToday) {
+                // Nếu là ô HÔM NAY (nhưng không được chọn)
+                holder.dayOfMonth.setBackgroundResource(R.drawable.today_background); // File chúng ta vừa tạo
+                holder.dayOfMonth.setTextColor(Color.BLACK);
+            }
+            else {
+                // Nếu là ô BÌNH THƯỜNG
+                holder.dayOfMonth.setBackground(null);
+                holder.dayOfMonth.setTextColor(Color.BLACK);
             }
         }
 

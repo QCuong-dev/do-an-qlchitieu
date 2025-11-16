@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,33 +15,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QLChiTieu">
         <activity
+            android:name=".Activites.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.AccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.TienIchKhacActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.GiaoDichDinhKyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.BienDongActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.HoTroActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.AddCategorySheetActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activites.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".Activites.AddChitieuActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".setting"
-            android:exported="false" />
-        <activity
-            android:name=".Activites.CalendarActivity"
             android:exported="true" />
         <activity
             android:name=".Activites.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".Activites.SigninActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activites.HomeActivity"
-            android:exported="false" />
         <activity
             android:name=".Activites.MainActivity"
             android:exported="true" />

@@ -6,14 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#FFFF"
-    tools:context=".Activites.CalendarActivity">
+    android:background="#FFFF">
 
     <!-- 1. Nội dung chính có thể cuộn -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"> <!-- Chừa không gian cho Bottom Nav -->
+        android:layout_height="match_parent"> <!-- Chừa không gian cho Bottom Nav -->
 
         <LinearLayout
             android:layout_width="match_parent"

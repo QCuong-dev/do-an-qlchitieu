@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#F5F5F5">
+    android:background="@color/white">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Nguyễn Văn A"
+            android:text="Ten"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -51,8 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="30.000.000 VND"
             android:textColor="@android:color/black"
+            android:text="0 VND"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
             android:paddingEnd="16dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_account"
+                android:id="@+id/btnAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -74,7 +74,7 @@
                 android:clickable="true">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_account"
+                    android:id="@+id/cvIconAccount"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:cardCornerRadius="20dp"
@@ -97,7 +97,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_account"
+                    app:layout_constraintStart_toEndOf="@id/cvIconAccount"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -112,7 +112,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_change_password"
+                android:id="@+id/btnChangePassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -121,7 +121,7 @@
                 android:clickable="true">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_password"
+                    android:id="@+id/cvIconPassword"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:cardCornerRadius="20dp"
@@ -144,7 +144,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_password"
+                    app:layout_constraintStart_toEndOf="@id/cvIconPassword"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -160,52 +160,7 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_dark_mode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_darkmode"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardBackgroundColor="#424242"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_moon"
-                        app:tint="@android:color/white" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Chế Độ Tối"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_darkmode"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switch_dark_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_history_trade"
+                android:id="@+id/btnHistoryTrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -214,7 +169,7 @@
                 android:clickable="true">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_history"
+                    android:id="@+id/cvIconHistory"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:cardCornerRadius="20dp"
@@ -237,103 +192,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_history"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/chevron_right"
-                    app:tint="@android:color/darker_gray"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_export_csv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_export"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardBackgroundColor="#89cff0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_csv"
-                        app:tint="@android:color/white" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Xuất CSV"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_export"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/chevron_right"
-                    app:tint="@android:color/darker_gray"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_exchange_rate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/icon_container_exchange_rate"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardBackgroundColor="#ffc000"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_rate"
-                        app:tint="@android:color/white" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tỷ giá tiền tệ"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toEndOf="@id/icon_container_exchange_rate"
+                    app:layout_constraintStart_toEndOf="@id/cvIconHistory"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -349,30 +208,56 @@
 
 
         </LinearLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true">
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvIconLogout"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="#FF9800"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@android:color/white" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đăng xuất"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toEndOf="@id/cvIconLogout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/chevron_right"
+                app:tint="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom">-->
-
-<!--        <com.nafis.bottomnavigation.NafisBottomNavigation-->
-<!--            android:id="@+id/bottomNavigation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:mbn_circleColor="#ffffff"-->
-<!--            app:mbn_backgroundBottomColor="#ffffff"-->
-<!--            app:mbn_countBackgroundColor="#ff6f00"-->
-<!--            app:mbn_countTextColor="#ffffff"-->
-<!--            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"-->
-<!--            app:mbn_defaultIconColor="#90a4ae"-->
-<!--            app:mbn_rippleColor="#2f424242"-->
-<!--            app:mbn_selectedIconColor="#3c415e"-->
-<!--            app:mbn_shadowColor="#1f212121"-->
-<!--            app:mbn_hasAnimation="true"-->
-<!--            />-->
-<!--    </RelativeLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

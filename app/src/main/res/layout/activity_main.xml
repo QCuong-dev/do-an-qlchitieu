@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent"
@@ -21,9 +20,10 @@
     <!-- Tôi giả định bạn đã có View này, hãy đảm bảo nó có ID là bottomNavigation -->
     <com.nafis.bottomnavigation.NafisBottomNavigation
         android:id="@+id/bottomNavigation"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
+
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

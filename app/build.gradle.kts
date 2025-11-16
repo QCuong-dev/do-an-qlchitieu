@@ -92,4 +92,7 @@ dependencies {
 //    implementation("com.google.ai.client:generativeai:0.6.0")
     implementation("com.google.guava:guava:33.2.1-android")
 
+    //Bar chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 }

@@ -1,14 +1,26 @@
 package com.example.qlchitieu.Fragment;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.qlchitieu.Activites.AccountActivity;
+import com.example.qlchitieu.Activites.ChangePasswordActivity;
+import com.example.qlchitieu.Activites.HistoryActivity;
 import com.example.qlchitieu.R;
+import com.google.android.material.imageview.ShapeableImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,5 +74,117 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_setting, container, false);
+    }
+
+    private TextView tvUserName, tvMonthlyAmount;
+    private ShapeableImageView ivAvatar;
+    private ConstraintLayout btnAccount, btnChangePassword, btnHistoryTrade, btnLogout;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        anhXaView(view);
+
+        // 2. Gán sự kiện click cho các nút
+        setClickListeners();
+
+        // 3. (Tùy chọn) Tải dữ liệu người dùng
+        loadUserData();
+    }
+
+    private void anhXaView(View view) {
+        // Thông tin người dùng
+        tvUserName = view.findViewById(R.id.tvUserName);
+        ivAvatar = view.findViewById(R.id.ivAvatar);
+        tvMonthlyAmount = view.findViewById(R.id.tvMonthlyAmount);
+
+        // Các nút chức năng
+        btnAccount = view.findViewById(R.id.btnAccount);
+        btnChangePassword = view.findViewById(R.id.btnChangePassword);
+        btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
+        btnLogout = view.findViewById(R.id.btnLogout);
+    }
+
+    /**
+     * Gán các trình xử lý sự kiện click cho các View.
+     */
+    private void setClickListeners() {
+        // Sự kiện click cho nút "Tài Khoản"
+        btnAccount.setOnClickListener(v -> {
+            Log.d("SettingFragment", "Nút Tài Khoản được click. Mở AccountActivity.");
+            // Mở màn hình AccountActivity
+            Intent intent = new Intent(getActivity(), AccountActivity.class);
+            startActivity(intent);
+        });
+
+        // Sự kiện click cho nút "Đổi Mật Khẩu"
+        btnChangePassword.setOnClickListener(v -> {
+            Log.d("SettingFragment", "Nút Đổi Mật Khẩu được click. Mở ChangePasswordActivity.");
+            // Mở màn hình ChangePasswordActivity
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+            startActivity(intent);
+        });
+
+        // Sự kiện click cho nút "Lịch sử"
+        btnHistoryTrade.setOnClickListener(v -> {
+            Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
+            // Mở màn hình HistoryActivity
+            Intent intent = new Intent(getActivity(), HistoryActivity.class);
+            startActivity(intent);
+        });
+
+        // Sự kiện click cho nút "Đăng xuất"
+        btnLogout.setOnClickListener(v -> {
+            // Thường thì nên hiển thị Dialog xác nhận trước khi đăng xuất
+            Log.d("SettingFragment", "Nút Đăng xuất được click");
+            showLogoutConfirmationDialog();
+        });
+    }
+
+    /**
+     * Hiển thị Dialog xác nhận trước khi đăng xuất.
+     */
+    private void showLogoutConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xác nhận Đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?")
+                .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                    // TODO: Xử lý logic đăng xuất
+                    // Ví dụ: Xóa SharedPreferences/Token, trở về màn hình Đăng nhập
+                    Toast.makeText(getContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
+                    // Ví dụ:
+                    // Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    // startActivity(intent);
+                    // getActivity().finish();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> {
+                    // Người dùng chọn "Hủy", không làm gì cả
+                    dialog.dismiss();
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert) // (Tùy chọn)
+                .show();
+    }
+
+    /**
+     * (Tùy chọn) Tải và hiển thị dữ liệu người dùng lên UI.
+     */
+    private void loadUserData() {
+        // TODO: Lấy dữ liệu người dùng từ SharedPreferences, Database hoặc API
+        // Ví dụ:
+        // String userName = ...;
+        // String monthlyAmount = ...;
+        // String avatarUrl = ...;
+
+        // tvUserName.setText(userName);
+        // tvMonthlyAmount.setText(monthlyAmount + " VND");
+        // (Sử dụng thư viện như Glide hoặc Picasso để tải ảnh)
+        // Glide.with(this).load(avatarUrl).into(ivAvatar);
+
+        // Dữ liệu giả (từ XML) đã được hiển thị, bạn có thể cập nhật
+        // nếu cần dữ liệu động
+        tvUserName.setText("Nguyễn Văn A (Updated)");
+        tvMonthlyAmount.setText("30.000.000 VND");
     }
 }

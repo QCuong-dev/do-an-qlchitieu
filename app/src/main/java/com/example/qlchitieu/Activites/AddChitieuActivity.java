@@ -1,16 +1,65 @@
 package com.example.qlchitieu.Activites;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.InputType;
+import android.util.Log;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.databinding.ActivityAddChitieuBinding;
+import com.google.android.material.chip.Chip;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 public class AddChitieuActivity extends AppCompatActivity {
 
     private ActivityAddChitieuBinding binding;
+
+    // --- PHẦN THÊM MỚI ĐỂ XỬ LÝ KẾT QUẢ TỪ CAMERA/GALLERY ---
+
+    // Launcher cho việc chọn ảnh từ thư viện
+    private final ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher =
+            registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                if (uri != null) {
+                    Log.d("PhotoPicker", "Selected URI: " + uri);
+                    // TODO: Hiển thị ảnh này lên một ImageView (nếu có)
+                    // binding.imageView.setImageURI(uri);
+                    Toast.makeText(this, "Đã chọn ảnh từ thư viện!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("PhotoPicker", "No media selected");
+                }
+            });
+
+    // Launcher cho việc chụp ảnh (chỉ lấy ảnh thumbnail, đơn giản)
+    private final ActivityResultLauncher<Void> takePicturePreviewLauncher =
+            registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
+                if (bitmap != null) {
+                    Log.d("Camera", "Photo taken!");
+                    // TODO: Hiển thị ảnh này lên một ImageView (nếu có)
+                    // binding.imageView.setImageBitmap(bitmap);
+                    Toast.makeText(this, "Đã chụp ảnh!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("Camera", "No photo taken");
+                }
+            });
+
+    // -----------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +68,208 @@ public class AddChitieuActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
 
-        binding.chipThemMoi.setOnClickListener(v -> clickAdd());
+        // Cài đặt ngày giờ hiện tại làm mặc định
+        setupDefaultDateTime();
+
+        // Thêm sự kiện click cho các nút
+        setupClickListeners();
     }
 
-    private void clickAdd() {
-        setContentView(R.layout.add_category_sheet  );
+    /**
+     * Gộp tất cả các sự kiện click vào một nơi
+     */
+    private void setupClickListeners() {
+        // 1. Nút đóng
+        binding.ivClose.setOnClickListener(v -> finish()); // Đóng Activity
+
+        // 2. Nút Lưu
+        binding.tvSave.setOnClickListener(v -> saveTransaction());
+
+        // 3. Nút Thêm mới (danh mục)
+        binding.chipThemMoi.setOnClickListener(v -> clickAddCategory());
+
+        // 4. Chọn ngày
+        binding.tvDate.setOnClickListener(v -> showDatePicker());
+
+        // 5. Chọn giờ
+        binding.tvTime.setOnClickListener(v -> showTimePicker());
+
+        // 6. Nhập ghi chú
+        binding.tvNote.setOnClickListener(v -> showNoteDialog());
+
+        // 7. Mở Thư viện ảnh
+        binding.btnGallery.setOnClickListener(v -> openGallery());
+
+        // 8. Mở Camera
+        binding.btnCamera.setOnClickListener(v -> openCamera());
+    }
+
+    /**
+     * Xử lý logic khi nhấn nút Lưu
+     */
+    private void saveTransaction() {
+        // Lấy số tiền
+        String amountString = binding.etAmount.getText().toString();
+        if (amountString.isEmpty() || amountString.equals("0 VND")) {
+            Toast.makeText(this, "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Lấy danh mục được chọn
+        String category = getSelectedCategory();
+        if (category == null) {
+            Toast.makeText(this, "Vui lòng chọn danh mục", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Lấy các thông tin khác
+        String date = binding.tvDate.getText().toString();
+        String time = binding.tvTime.getText().toString();
+        String note = binding.tvNote.getText().toString();
+        if (note.equals("Ghi Chú")) {
+            note = ""; // Nếu người dùng chưa nhập gì, lưu là rỗng
+        }
+
+        // Tạo một thông báo Toast để hiển thị kết quả
+        String result = "Đã lưu: \n" +
+                "Số tiền: " + amountString + "\n" +
+                "Danh mục: " + category + "\n" +
+                "Ngày: " + date + "\n" +
+                "Giờ: " + time + "\n" +
+                "Ghi chú: " + note;
+
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+
+        // TODO: Thêm logic lưu dữ liệu này vào Database (SQLite, Room...)
+        // Sau khi lưu thành công, bạn có thể gọi finish()
+        // finish();
+    }
+
+    /**
+     * Lấy text của Chip đang được chọn trong ChipGroup
+     *
+     * @return Tên danh mục (ví dụ: "🍜 Ăn uống") hoặc null nếu chưa chọn
+     */
+    private String getSelectedCategory() {
+        int selectedChipId = binding.chipGroupCategories.getCheckedChipId();
+        if (selectedChipId != -1) {
+            Chip selectedChip = findViewById(selectedChipId);
+            return selectedChip.getText().toString();
+        }
+        return null; // Không có chip nào được chọn
+    }
+
+    /**
+     * Mở Activity thêm danh mục
+     */
+    private void clickAddCategory() {
+        Intent intent = new Intent(AddChitieuActivity.this, AddCategorySheetActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Mở thư viện ảnh (sử dụng PickVisualMedia)
+     */
+    private void openGallery() {
+        // Chỉ chọn ảnh
+        pickMediaLauncher.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
+    }
+
+    /**
+     * Mở camera để chụp ảnh (sử dụng TakePicturePreview)
+     * Cần cấp quyền <uses-permission android:name="android.permission.CAMERA" />
+     * trong file AndroidManifest.xml
+     */
+    private void openCamera() {
+        // TODO: Cần kiểm tra quyền CAMERA trước khi gọi
+        takePicturePreviewLauncher.launch(null);
+    }
+
+    // --- CÁC PHƯƠNG THỨC HỖ TRỢ CHO DATE, TIME, NOTE (từ lần trước) ---
+
+    private void setupDefaultDateTime() {
+        Calendar calendar = Calendar.getInstance();
+
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String dateString = String.format(Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
+        binding.tvDate.setText(dateString);
+
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        String timeString = String.format(Locale.getDefault(), "%02d:%02d", hour, minute);
+        binding.tvTime.setText(timeString);
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    String dateString = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear);
+                    binding.tvDate.setText(dateString);
+                }, year, month, day);
+        datePickerDialog.show();
+    }
+
+    private void showTimePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                (view, selectedHour, selectedMinute) -> {
+                    String timeString = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                    binding.tvTime.setText(timeString);
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    private void showNoteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Thêm Ghi Chú");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setLines(4);
+        input.setHint("Nhập ghi chú của bạn...");
+
+        String currentNote = binding.tvNote.getText().toString();
+        if (!currentNote.equals("Ghi Chú")) {
+            input.setText(currentNote);
+        }
+
+        FrameLayout container = new FrameLayout(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.leftMargin = 50;
+        params.rightMargin = 50;
+        input.setLayoutParams(params);
+        container.addView(input);
+
+        builder.setView(container);
+
+        builder.setPositiveButton("Lưu", (dialog, which) -> {
+            String note = input.getText().toString().trim();
+            if (note.isEmpty()) {
+                binding.tvNote.setText("Ghi Chú");
+                binding.tvNote.setTextColor(ContextCompat.getColor(this, R.color.gray));
+            } else {
+                binding.tvNote.setText(note);
+                binding.tvNote.setTextColor(ContextCompat.getColor(this, android.R.color.black));
+            }
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.cancel());
+
+        builder.show();
     }
 }
