@@ -25,8 +25,9 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG USER =====
         db.execSQL("CREATE TABLE IF NOT EXISTS User (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "name TEXT NOT NULL, " +
-                "birth_date TEXT NOT NULL, " +
+                "age TEXT NOT NULL, " +
                 "email TEXT NOT NULL UNIQUE, " +
                 "username TEXT, " +
                 "password TEXT, " +
@@ -37,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG WALLET =====
         db.execSQL("CREATE TABLE IF NOT EXISTS Wallet (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "user_id INTEGER NOT NULL, " +
                 "wallet_name TEXT NOT NULL, " +
                 "balance REAL NOT NULL DEFAULT 0, " +
@@ -48,9 +50,9 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG CATEGORY =====
         db.execSQL("CREATE TABLE IF NOT EXISTS Category (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "user_id INTEGER NOT NULL, " +
                 "name TEXT NOT NULL, " +
-                "type TEXT CHECK (type IN ('income', 'expense')) NOT NULL DEFAULT 'expense', " +
                 "icon INTEGER, " +
                 "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(user_id) REFERENCES User(id) ON DELETE CASCADE" +
@@ -59,6 +61,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG TRANSACTION =====
         db.execSQL("CREATE TABLE IF NOT EXISTS `Transaction` (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "wallet_id INTEGER NOT NULL, " +
                 "category_id INTEGER NOT NULL, " +
                 "amount REAL NOT NULL, " +
@@ -74,6 +77,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG BUDGET =====
         db.execSQL("CREATE TABLE IF NOT EXISTS Budget (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "user_id INTEGER NOT NULL, " +
                 "category_id INTEGER NOT NULL, " +
                 "amount_limit REAL NOT NULL, " +
@@ -87,6 +91,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // ===== TẠO BẢNG ATTACHMENT =====
         db.execSQL("CREATE TABLE IF NOT EXISTS Attachment (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "uuid TEXT DEFAULT NULL, " +
                 "transaction_id INTEGER NOT NULL, " +
                 "file_path TEXT NOT NULL, " +
                 "created_at TEXT DEFAULT CURRENT_DATE, " +

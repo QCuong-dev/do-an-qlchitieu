@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 
 import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.data.db.dao.UserDAO;
+import com.example.qlchitieu.data.db.firebase.BaseFirebase;
+import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.example.qlchitieu.model.User;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -16,10 +18,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class UserController extends BaseController<User> {
+public class UserController extends BaseController<User,UserDAO, BaseFirebase<User>> {
+    private SharedPrefHelper sharedPrefHelper;
+
     public UserController(Context context){
         super(new UserDAO(DBHelper.getInstance(context).getWritableDatabase()));
+        sharedPrefHelper = new SharedPrefHelper(context);
     }
 
     // Handle Login in local
@@ -81,30 +87,54 @@ public class UserController extends BaseController<User> {
     }
 
     public User getUserByEmail(String email) {
-        List<User> users = dao.getAll();
-        for (User u : users) {
-            if (u.getEmail().equalsIgnoreCase(email)) {
-                return u;
-            }
-        }
-        return null;
+        return dao.getUserByEmail(email);
+    }
+
+    public void saveSharedPrefUser(User user){
+        sharedPrefHelper.saveString("nameUser",user.getName());
+        sharedPrefHelper.saveString("emailUser", user.getEmail());
+        sharedPrefHelper.saveInt("idUser",user.getId());
+
+        Log.d("SHARED_PREF", "User saved to SharedPreferences: " + user.getName() + " - " + user.getEmail());
     }
 
     // UserController.java
     public void handleGoogleLogin(FirebaseUser firebaseUser, Context context) {
         User user = new User();
-        user.setName(firebaseUser.getDisplayName());
         user.setEmail(firebaseUser.getEmail());
-        user.setUsername(firebaseUser.getEmail()); // hoặc UID
-        user.setPassword("GOOGLE_USER"); // vì user Google không có password
-        user.setAge("N/A");
 
-        // Lưu vào SQLite
-        dao.insert(user);
+        if(isEmailExists(user.getEmail())){
+            User userEmail = getUserByEmail(user.getEmail());
+
+            // Save for uuid get
+            user.setId(userEmail.getId());
+            user.setName(userEmail.getName());
+            user.setUsername(userEmail.getUsername());
+            user.setPassword(userEmail.getPassword());
+            user.setAge(userEmail.getAge());
+            user.setUuid(userEmail.getUuid());
+            user.setCreatedAt(userEmail.getCreatedAt());
+
+            // Lưu vào SharedPreferences
+            saveSharedPrefUser(userEmail);
+        }else{
+            // Lưu vào SQLite
+            user.setName(firebaseUser.getDisplayName());
+            user.setUsername(firebaseUser.getEmail()); // hoặc UID
+            user.setPassword("GOOGLE_USER"); // vì user Google không có password
+            user.setAge("N/A");
+            user.setCreatedAt(dao.getCurrentDate());
+            user.setUuid(UUID.randomUUID().toString());
+            long resultInsert = dao.insert(user);
+            if(resultInsert > 0) {
+                user.setId((int) resultInsert);
+                saveSharedPrefUser(user);
+            }
+        }
 
         // Lưu lên Firestore
         firebaseDB.collection("users")
-                .document(firebaseUser.getUid())
+                .document(user.getUuid())
                 .set(user)
                 .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "User Google saved successfully"))
                 .addOnFailureListener(e -> Log.e("FIREBASE", "Failed to save Google user", e));

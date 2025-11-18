@@ -2,6 +2,7 @@ package com.example.qlchitieu.model;
 
 public class User {
     private int id;
+    private String uuid;
     private String name;
     private String age;
     private String email;
@@ -10,7 +11,8 @@ public class User {
     private String createdAt;
 
     public User(){}
-    public User(String name, String age, String email, String username, String password) {
+    public User(String uuid, String name, String age, String email, String username, String password) {
+        this.uuid = uuid;
         this.name = name;
         this.age = age;
         this.email = email;
@@ -24,6 +26,14 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getName() {

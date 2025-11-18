@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.controller.UserController;
 import com.example.qlchitieu.databinding.ActivitySigninBinding;
+import com.example.qlchitieu.model.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,6 +23,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.List;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -45,6 +48,14 @@ public class SigninActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id)) // lấy từ google-services.json
                 .requestEmail()
                 .build();
+
+        // TEST
+        UserController userController = new UserController(this);
+        List<User> users = userController.getAll();
+        for(User u : users){
+            Log.d("DONVAU::GET","ID: " + u.getId() + " - " + u.getName() + " - " + u.getEmail() + " - " + u.getAge() + " - " + u.getUsername() + " - " + u.getPassword() + " - " + u.getCreatedAt());
+        }
+        // END
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 

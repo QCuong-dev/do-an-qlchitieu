@@ -57,6 +57,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AddCategorySheet"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".Activites.MainActivity"
             android:exported="true" />
     </application>
