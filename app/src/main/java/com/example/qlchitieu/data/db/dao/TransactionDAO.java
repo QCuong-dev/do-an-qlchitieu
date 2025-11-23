@@ -26,27 +26,29 @@ public class TransactionDAO extends BaseDAO<Transaction> {
     protected ContentValues getContentValues(Transaction transaction) {
         ContentValues values = new ContentValues();
         values.put("uuid", transaction.getUuid());
-//        values.put("name",transaction.getName());
-//        values.put("age",transaction.getAge());
-//        values.put("email",transaction.getEmail());
-//        values.put("username",transaction.getUsername());
-//        values.put("password",transaction.getPassword());
-        values.put("created_at", getCurrentDate());
+        values.put("wallet_id",transaction.getWallet_id());
+        values.put("category_id",transaction.getWallet_id());
+        values.put("amount",transaction.getAmount());
+        values.put("note",transaction.getNote());
+        values.put("date",transaction.getDate());
+        values.put("type", transaction.getType());
+        values.put("created_at",getCurrentDate());
         return values;
     }
 
     @Override
     protected Transaction parseCursor(Cursor cursor) {
-        Transaction user = new Transaction();
-        user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
-        user.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
-//        user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-//        user.setAge(cursor.getString(cursor.getColumnIndexOrThrow("age")));
-//        user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
-//        user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
-//        user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("password")));
-//        user.setCreatedAt(cursor.getString(cursor.getColumnIndexOrThrow("created_at")));
-        return user;
+        Transaction transaction = new Transaction();
+        transaction.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+        transaction.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
+        transaction.setWallet_id(cursor.getInt(cursor.getColumnIndexOrThrow("wallet_id")));
+        transaction.setCategory_id(cursor.getInt(cursor.getColumnIndexOrThrow("category_id")));
+        transaction.setAmount(cursor.getFloat(cursor.getColumnIndexOrThrow("amount")));
+        transaction.setNote(cursor.getString(cursor.getColumnIndexOrThrow("note")));
+        transaction.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
+        transaction.setType(cursor.getString(cursor.getColumnIndexOrThrow("type")));
+        transaction.setCreated_at(cursor.getString(cursor.getColumnIndexOrThrow("created_at")));
+        return transaction;
     }
 
     public String getCurrentDate() {
