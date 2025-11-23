@@ -2,4 +2,28 @@
     <string name="app_name">PayDC</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="currency_array">
+        <item>VND</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
+    <string-array name="themchitieu_array">
+        <item>Tiền vào</item>
+        <item>Tiền ra</item>
+        <item>Budget</item>
+    </string-array>
+
+    <string-array name="default_categories">
+        <item>Ăn uống</item>
+        <item>Di chuyển</item>
+        <item>Nhà ở</item>
+        <item>Hóa đơn &amp; Tiện ích</item>
+        <item>Mua sắm</item>
+        <item>Giải trí</item>
+        <item>Sức khỏe &amp; Làm đẹp</item>
+        <item>Giáo dục</item>
+        <item>Thu nhập</item>
+        <item>Khác</item>
+    </string-array>
 </resources>

@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +18,12 @@
         android:roundIcon="@mipmap/ic_paydc_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QLChiTieu">
+        <activity
+            android:name=".Activites.AddBudgetActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Activites.AddEditWalletActivity"
+            android:exported="true" />
         <activity
             android:name=".Activites.HistoryActivity"
             android:exported="false" />
@@ -55,11 +65,20 @@
         </activity>
         <activity
             android:name=".AddCategorySheet"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".Activites.MainActivity"
             android:exported="true" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.qlchitieu.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>
