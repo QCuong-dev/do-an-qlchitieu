@@ -187,13 +187,4 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
                 .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "User Google saved successfully"))
                 .addOnFailureListener(e -> Log.e("FIREBASE", "Failed to save Google user", e));
     }
-
-
-    /**
-     * Callback interface login async
-     */
-    public interface LoginCallback{
-        void onSuccess(User user);
-        void onFailure(String message);
-    }
 }
