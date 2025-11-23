@@ -3,11 +3,14 @@ package com.example.qlchitieu.helpers;
 import android.content.Context;
 import android.util.Patterns;
 
+import com.example.qlchitieu.Activites.MainActivity;
+import com.example.qlchitieu.Fragment.HomeFragment;
 import com.example.qlchitieu.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import android.content.Intent;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +20,9 @@ public class Helpers {
     private final SharedPrefHelper sharedPrefHelper;
     private final FirebaseAuth mAuth;
     private final GoogleSignInClient mGoogleSignInClient;
+    private final Context context;
     public Helpers(Context context){
+        this.context = context;
         sharedPrefHelper = new SharedPrefHelper(context);
 
         mAuth = FirebaseAuth.getInstance();
@@ -52,5 +57,20 @@ public class Helpers {
 
     public String getCurrentDate() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    }
+
+    public boolean handleIsLogin(){
+        boolean isLogin = sharedPrefHelper.getBoolean("isLogin",false);
+
+        if(isLogin){
+            Intent intent = new Intent(context, MainActivity.class);
+
+            // Dọn dẹp Activity stack (quan trọng để người dùng không bấm Back quay lại Login)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            context.startActivity(intent);
+            return  true;
+        }
+        return false;
     }
 }

@@ -142,6 +142,7 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
         sharedPrefHelper.saveString("nameUser",user.getName());
         sharedPrefHelper.saveString("emailUser", user.getEmail());
         sharedPrefHelper.saveInt("idUser",user.getId());
+        sharedPrefHelper.saveBoolean("isLogin",true);
 
         Log.d("SHARED_PREF", "User saved to SharedPreferences: " + user.getName() + " - " + user.getEmail());
     }

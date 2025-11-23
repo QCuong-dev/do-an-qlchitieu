@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.controller.UserController;
 import com.example.qlchitieu.databinding.ActivitySigninBinding;
+import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.model.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,6 +34,7 @@ public class SigninActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private UserController userController;
+    private Helpers helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class SigninActivity extends AppCompatActivity {
         binding = ActivitySigninBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         userController = new UserController(this);
+        helper = new Helpers(this);
+
+        // Check isLogin
+        if(helper.handleIsLogin()) finish();
 
         // 🔹 Khởi tạo Firebase
         FirebaseApp.initializeApp(this);
