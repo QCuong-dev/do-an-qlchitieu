@@ -24,9 +24,6 @@
             android:name=".Activites.AccountActivity"
             android:exported="false" />
         <activity
-            android:name=".Activites.TienIchKhacActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activites.GiaoDichDinhKyActivity"
             android:exported="false" />
         <activity

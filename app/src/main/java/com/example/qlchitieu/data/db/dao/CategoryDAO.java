@@ -30,6 +30,7 @@ public class CategoryDAO extends BaseDAO<Category> {
     @Override
     protected Category parseCursor(Cursor cursor) {
         Category category = new Category();
+        category.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
         category.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
         category.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
         category.setUser_id(cursor.getInt(cursor.getColumnIndexOrThrow("user_id")));

@@ -3,6 +3,8 @@ package com.example.qlchitieu.data.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Pair;
+
 import com.example.qlchitieu.model.User;
 
 import java.text.SimpleDateFormat;
@@ -60,5 +62,36 @@ public class UserDAO extends BaseDAO<User> {
 
     public String getCurrentDate() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    }
+
+    public Pair<User,Boolean> isLogin(String email, String password){
+        String selection = "email = ? AND password = ?";
+        String[] selectionArgs = { email,password };
+
+        Cursor cursor = db.query(
+                getTableName(),
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        if(cursor.moveToFirst()){
+            User user = new User();
+            user.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            user.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
+            user.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
+            user.setAge(cursor.getString(cursor.getColumnIndexOrThrow("age")));
+            user.setEmail(cursor.getString(cursor.getColumnIndexOrThrow("email")));
+            user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
+            user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("password")));
+            user.setCreatedAt(cursor.getString(cursor.getColumnIndexOrThrow("created_at")));
+            cursor.close();
+            return new Pair<>(user,true);
+        }
+
+        cursor.close();
+        return new Pair<>(null,false);
     }
 }

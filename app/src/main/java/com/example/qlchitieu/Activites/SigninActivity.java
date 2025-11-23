@@ -32,12 +32,14 @@ public class SigninActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+    private UserController userController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySigninBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        userController = new UserController(this);
 
         // 🔹 Khởi tạo Firebase
         FirebaseApp.initializeApp(this);
@@ -48,14 +50,6 @@ public class SigninActivity extends AppCompatActivity {
                 .requestIdToken(getString(R.string.default_web_client_id)) // lấy từ google-services.json
                 .requestEmail()
                 .build();
-
-        // TEST
-        UserController userController = new UserController(this);
-        List<User> users = userController.getAll();
-        for(User u : users){
-            Log.d("DONVAU::GET","ID: " + u.getId() + " - " + u.getName() + " - " + u.getEmail() + " - " + u.getAge() + " - " + u.getUsername() + " - " + u.getPassword() + " - " + u.getCreatedAt());
-        }
-        // END
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -86,13 +80,16 @@ public class SigninActivity extends AppCompatActivity {
     }
 
     private void signinWithEmailAndPassword() {
-        if(binding.etEmail.getText().toString().equals("dung@gmail.com") && binding.etPassword.getText().toString().equals("123")){
-            Toast.makeText(SigninActivity.this, "Login success", Toast.LENGTH_SHORT).show();
+        String email = binding.etEmail.getText().toString();
+        String password = binding.etPassword.getText().toString();
+
+        if(userController.login(email,password)){
+            Toast.makeText(SigninActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(SigninActivity.this, MainActivity.class);
             startActivity(intent);
         }
         else
-            Toast.makeText(SigninActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SigninActivity.this, "Tài khoản hoặc mật khẩu không chính xác", Toast.LENGTH_SHORT).show();
     }
 
     private void signInWithGoogle() {

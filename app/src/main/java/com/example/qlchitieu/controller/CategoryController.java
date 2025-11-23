@@ -63,4 +63,27 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
         });
     }
 
+    public void deleteCategory(int idCategory,BaseFirebase.DataCallback<String> callback){
+        Category category = dao.getById(idCategory);
+
+        if(category == null){
+            callback.onFailure("Không tìm thấy danh mục");
+            return;
+        }
+
+        // Delete in firebase
+        fBase.deleteDocument(category.getUuid(), new BaseFirebase.DataCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                int result = dao.delete("id = ?",new String[]{String.valueOf(idCategory)});
+                callback.onSuccess("Xóa danh mục thành công");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure("Lỗi khi xóa danh mục");
+            }
+        });
+    }
+
 }

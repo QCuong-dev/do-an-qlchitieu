@@ -19,7 +19,10 @@ import android.widget.Toast;
 import com.example.qlchitieu.Activites.AccountActivity;
 import com.example.qlchitieu.Activites.ChangePasswordActivity;
 import com.example.qlchitieu.Activites.HistoryActivity;
+import com.example.qlchitieu.Activites.SigninActivity;
 import com.example.qlchitieu.R;
+import com.example.qlchitieu.helpers.Helpers;
+import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.google.android.material.imageview.ShapeableImageView;
 
 /**
@@ -33,6 +36,7 @@ public class SettingFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private Helpers helper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -63,6 +67,8 @@ public class SettingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Init
+        helper = new Helpers(requireContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -136,8 +142,6 @@ public class SettingFragment extends Fragment {
 
         // Sự kiện click cho nút "Đăng xuất"
         btnLogout.setOnClickListener(v -> {
-            // Thường thì nên hiển thị Dialog xác nhận trước khi đăng xuất
-            Log.d("SettingFragment", "Nút Đăng xuất được click");
             showLogoutConfirmationDialog();
         });
     }
@@ -150,14 +154,12 @@ public class SettingFragment extends Fragment {
                 .setTitle("Xác nhận Đăng xuất")
                 .setMessage("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?")
                 .setPositiveButton("Đăng xuất", (dialog, which) -> {
-                    // TODO: Xử lý logic đăng xuất
-                    // Ví dụ: Xóa SharedPreferences/Token, trở về màn hình Đăng nhập
+                    helper.handleLogout();
                     Toast.makeText(getContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
-                    // Ví dụ:
-                    // Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    // startActivity(intent);
-                    // getActivity().finish();
+                     Intent intent = new Intent(getActivity(), SigninActivity.class);
+                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                     startActivity(intent);
+                     getActivity().finish();
                 })
                 .setNegativeButton("Hủy", (dialog, which) -> {
                     // Người dùng chọn "Hủy", không làm gì cả

@@ -10,12 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.widget.LinearLayout;
+
 
 import com.example.qlchitieu.controller.CategoryController;
 import com.example.qlchitieu.controller.UserController;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.databinding.ActivityAddChitieuBinding;
 import com.example.qlchitieu.databinding.AddCategorySheetBinding;
+import com.example.qlchitieu.databinding.ItemCategoryBinding;
 import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.example.qlchitieu.model.Category;
 import com.example.qlchitieu.model.User;
@@ -58,4 +61,6 @@ public class AddCategorySheet extends AppCompatActivity {
             }
         });
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.example.qlchitieu.controller;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,8 @@ import androidx.annotation.NonNull;
 import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.data.db.dao.UserDAO;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
+import com.example.qlchitieu.data.db.firebase.UserFirebase;
+import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.example.qlchitieu.model.User;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,21 +23,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class UserController extends BaseController<User,UserDAO, BaseFirebase<User>> {
+public class UserController extends BaseController<User,UserDAO, UserFirebase> {
     private SharedPrefHelper sharedPrefHelper;
+    private Helpers helper;
 
     public UserController(Context context){
-        super(new UserDAO(DBHelper.getInstance(context).getWritableDatabase()));
+        super(new UserDAO(DBHelper.getInstance(context).getWritableDatabase()),new UserFirebase());
         sharedPrefHelper = new SharedPrefHelper(context);
+        helper = new Helpers(context);
     }
 
-    // Handle Login in local
-    public User loginLocal(String username,String password){
-        List<User> users = dao.getAll();
-        for(User u : users){
-            if(u.getUsername().equals(username) && u.getPassword().equals(password)) return u;
+    // Handle Login
+    public boolean login(String username, String password){
+        // Check user google
+        if(password.equals("GOOGLE_USER")) return false;
+
+        Pair<User,Boolean> result = dao.isLogin(username,password);
+        if(!result.second){
+            return false;
         }
-        return null;
+
+        User user = result.first;
+        // Lưu vào SharedPreferences
+        saveSharedPrefUser(user);
+        return true;
     }
 
     // Check email exists
@@ -46,44 +58,80 @@ public class UserController extends BaseController<User,UserDAO, BaseFirebase<Us
         return false;
     }
 
-    // Login with firebase
-    public void loginWithFirebase(String email, LoginCallback callback){
-        firebaseDB.collection("users")
-                .whereEqualTo("email",email)
-                .get()
-                .addOnSuccessListener(querySnapshot ->{
-                    if(!querySnapshot.isEmpty()){
-                        DocumentSnapshot doc = querySnapshot.getDocuments().get(0);
-                        User user = doc.toObject(User.class);
-                        if(user != null){
-                            if(isEmailExists(user.getEmail())) dao.insert(user);
-                        }
-                        callback.onSuccess(user);
-                    }else{
-                        callback.onFailure("User not found");
-                    }
-                }).addOnFailureListener(e -> callback.onFailure("Error: " + e.getMessage()));
+    private Pair<Boolean,String> valiadateRegister(String email, String fullName, String password, String confirmPassword){
+        if(fullName == null || fullName.isEmpty()){
+            return new Pair<>(false,"Tên không được để trống");
+        }
+        if(fullName.length() >= 30){
+            return new Pair<>(false,"Họ và tên không được quá 30 ký tự");
+        }
+        if(!helper.isString(fullName)){
+            return new Pair<>(false,"Họ và tên vui lòng phải là chữ");
+        }
+        if(email == null || email.isEmpty()){
+            return new Pair<>(false, "Email không được để trống");
+        }
+        if(email.length() >= 40){
+            return new Pair<>(false, "Email không được quá 40 ký tự");
+        }
+        if(!helper.isEmail(email)){
+            return new Pair<>(false, "Email không đúng định dạng");
+        }
+        if((password == null || password.isEmpty()) && (confirmPassword == null || confirmPassword.isEmpty())){
+            return new Pair<>(false, "Mật khẩu không được để trống");
+        }
+        if(password.length() < 6 || password.length() >= 20 ){
+            return new Pair<>(false, "Mật khẩu phải từ 6-20 ký tự");
+        }
+        if(!password.equals(confirmPassword)){
+            return new Pair<>(false, "Mật khẩu không khớp");
+        }
+
+        return new Pair<>(true,"Xác nhận thành công");
     }
 
     // Register
-    public void register(User user, Context context){
-        Map<String,Object> data = new HashMap<>();
-        data.put("name",user.getName());
-        data.put("age",user.getAge());
-        data.put("email",user.getEmail());
-        data.put("username",user.getUsername());
-        data.put("password",user.getPassword());
+    public void register(String name, String email, String password, BaseFirebase.DataCallback<String> callback){
+        User user = new User();
+        String uuid = UUID.randomUUID().toString();
 
-        firebaseDB.collection("users")
-                .add(data)
-                .addOnSuccessListener(doc->{
-                    dao.insert(user);
-                    Toast.makeText(context, "Register success", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e->{
-                    Toast.makeText(context, "Register failed error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("FIREBASE","Error Register Firebase: ", e);
-                });
+        // Check valiadate
+        Pair<Boolean,String> valiadated = valiadateRegister(email,name,password,password);
+        if(!valiadated.first){
+            callback.onFailure(valiadated.second);
+            return;
+        }
+
+        // Check email exist
+        if(dao.exist("email",email)){
+            callback.onFailure("Email đã tồn tại");
+            return;
+        }
+
+        user.setUuid(uuid);
+        user.setName(name);
+        user.setAge("");
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setCreatedAt(helper.getCurrentDate());
+        long result = dao.insert(user);
+        if(result <= 0){
+            callback.onFailure("Đăng ký thất bại");
+        }else{
+            user.setId((int)result);
+
+            fBase.addDocument(uuid, user, new BaseFirebase.DataCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    callback.onSuccess("Đăng ký thành công");
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    callback.onFailure("Error when insert: " + message);
+                }
+            });
+        }
     }
 
     public User getUserByEmail(String email) {
