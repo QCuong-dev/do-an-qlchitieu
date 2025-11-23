@@ -13,4 +13,17 @@
         <item>Tiền ra</item>
         <item>Budget</item>
     </string-array>
+
+    <string-array name="default_categories">
+        <item>Ăn uống</item>
+        <item>Di chuyển</item>
+        <item>Nhà ở</item>
+        <item>Hóa đơn &amp; Tiện ích</item>
+        <item>Mua sắm</item>
+        <item>Giải trí</item>
+        <item>Sức khỏe &amp; Làm đẹp</item>
+        <item>Giáo dục</item>
+        <item>Thu nhập</item>
+        <item>Khác</item>
+    </string-array>
 </resources>
