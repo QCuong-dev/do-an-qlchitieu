@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Số dư Ban đầu">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_text_balance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loại Tiền Tệ"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray" />
+
+    <Spinner
+        android:id="@+id/spinner_currency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="32dp"
+        android:entries="@array/currency_array" />
+    <Button
+        android:id="@+id/button_save_wallet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LƯU VÍ"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</LinearLayout>

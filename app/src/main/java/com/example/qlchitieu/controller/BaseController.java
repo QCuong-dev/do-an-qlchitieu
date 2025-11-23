@@ -1,17 +1,28 @@
 package com.example.qlchitieu.controller;
 
+import android.content.Context;
+
 import com.example.qlchitieu.data.db.dao.BaseDAO;
+import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-public abstract class BaseController<T> {
-    protected BaseDAO<T> dao;
+public abstract class BaseController<T,DAO extends BaseDAO<T>, FBase extends BaseFirebase<T>> {
+    protected DAO dao;
+    protected FBase fBase;
     protected FirebaseFirestore firebaseDB;
+    Context context;
 
-    public BaseController(BaseDAO<T> dao){
+    public BaseController(DAO dao){
         this.dao = dao;
         this.firebaseDB = FirebaseFirestore.getInstance();
+    }
+
+    public BaseController(DAO dao, FBase fBase){
+        this.dao = dao;
+        this.firebaseDB = FirebaseFirestore.getInstance();
+        this.fBase = fBase;
     }
 
     public long insert(T entity){
@@ -32,5 +43,9 @@ public abstract class BaseController<T> {
 
     public void close(){
 
+    }
+
+    public boolean exist(String column,String field){
+        return dao.exist(column,field);
     }
 }

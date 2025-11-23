@@ -3,6 +3,7 @@ package com.example.qlchitieu.data.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,52 @@ public abstract class BaseDAO<T> {
         cursor.close();
         return null;
     }
+    // Get By
+    public T getBy(String column,String value){
+        String selection = column + " = ?";
+        String[] selectionArgs = { value };
+
+        Cursor cursor = db.query(
+                getTableName(),
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        if(cursor.moveToFirst()){
+            T obj = parseCursor(cursor);
+            cursor.close();
+            return obj;
+        }
+
+        cursor.close();
+        return null;
+    }
+    // Exists
+    public boolean exist(String column,String value){
+        String selection = column + " = ?";
+        String[] selectionArgs = { value };
+
+        Cursor cursor = db.query(
+                getTableName(),
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+        if(cursor.moveToFirst()){
+            cursor.close();
+            return true;
+        }
+
+        cursor.close();
+        return false;
+    }
+
 
     // Hàm bắt buộc
     protected abstract String getTableName();

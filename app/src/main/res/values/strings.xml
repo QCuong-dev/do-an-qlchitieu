@@ -2,4 +2,15 @@
     <string name="app_name">PayDC</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="currency_array">
+        <item>VND</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
+    <string-array name="themchitieu_array">
+        <item>Tiền vào</item>
+        <item>Tiền ra</item>
+        <item>Budget</item>
+    </string-array>
 </resources>
