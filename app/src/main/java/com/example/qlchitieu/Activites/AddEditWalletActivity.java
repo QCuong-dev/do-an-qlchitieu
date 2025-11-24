@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.qlchitieu.R;
+import com.example.qlchitieu.controller.WalletController;
+import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.databinding.ActivityAddEditWalletBinding;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -26,11 +28,13 @@ public class AddEditWalletActivity extends AppCompatActivity {
 
     // Giả sử bạn đang làm việc với User ID tĩnh cho mục đích demo
     private final long CURRENT_USER_ID = 1;
+    private WalletController walletController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddEditWalletBinding.inflate(getLayoutInflater());
+        walletController = new WalletController(this);
 
         // **Bước 2: Thay thế setContentView bằng root view của binding**
         setContentView(binding.getRoot());
@@ -69,8 +73,18 @@ public class AddEditWalletActivity extends AppCompatActivity {
 
         // Đặt lắng nghe sự kiện cho Button
         binding.buttonSaveWallet.setOnClickListener(v -> {
-            Toast.makeText(this, "Nút Lưu Ví đã được nhấn!", Toast.LENGTH_SHORT).show();
-            // Xử lý logic lưu dữ liệu ở đây
+            walletController.saveWallet(Integer.parseInt(binding.etBalance.getText().toString()), binding.spnCurrency.getSelectedItem().toString(), new BaseFirebase.DataCallback<String>() {
+                @Override
+                public void onSuccess(String data) {
+                    Toast.makeText(AddEditWalletActivity.this, data, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(AddEditWalletActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         setupToolbar();
