@@ -71,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void showBottomNavigationTab(int id, boolean animated) {
+        if (bottomNavigation != null) {
+            bottomNavigation.show(id, animated);
+        }
+    }
 
     private void LoadAndReplaceFragment(Fragment fragment) {
         getSupportFragmentManager()

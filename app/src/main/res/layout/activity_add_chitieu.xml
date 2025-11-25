@@ -68,25 +68,25 @@
             android:background="@null" />
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🏷OPtion chi tiêu"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="15sp"
-        android:textColor="#555" />
-    <Spinner
-        android:id="@+id/snpOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginBottom="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:entries="@array/themchitieu_array" />
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="🏷OPtion chi tiêu"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textColor="#555" />-->
+<!--    <Spinner-->
+<!--        android:id="@+id/snpOption"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingBottom="10dp"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        android:entries="@array/themchitieu_array" />-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -104,6 +104,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        app:chipSpacingHorizontal="2dp"
+        app:chipSpacingVertical="2dp"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -111,7 +113,7 @@
             android:id="@+id/chipAnUong"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="🍜 Ăn uống"
             android:checked="true" />
 

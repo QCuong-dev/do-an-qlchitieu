@@ -59,6 +59,9 @@ public class AccountActivity extends AppCompatActivity {
         binding.etFullName.setText("Nguyễn Văn A");
         binding.etEmail.setText("nguyenvana@example.com");
 
+        binding.etAccountCreationDate.setText("20/05/2023"); // Ngày tạo tài khoản (Không thể sửa)
+        binding.etAge.setText("28"); // Tuổi
+
         // Dùng Glide hoặc Picasso để tải ảnh đại diện vào binding.ivAvatar
         // Ví dụ:
         // Glide.with(this)

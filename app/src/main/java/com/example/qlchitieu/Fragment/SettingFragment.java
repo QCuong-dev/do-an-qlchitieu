@@ -112,8 +112,8 @@ public class SettingFragment extends Fragment {
         btnChangePassword = view.findViewById(R.id.btnChangePassword);
         btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
         btnLogout = view.findViewById(R.id.btnLogout);
-        btnBudget = view.findViewById(R.id.btnBudget);
-        btnWallet =  view.findViewById(R.id.btnWallet);
+//        btnBudget = view.findViewById(R.id.btnBudget);
+//        btnWallet =  view.findViewById(R.id.btnWallet);
     }
 
     /**
@@ -135,16 +135,16 @@ public class SettingFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
-        // Sự kiện click cho nút "Wallet"
-        btnWallet.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
-            startActivity(intent);
-                });
-        // Sự kiện click cho nút "Budget"
-        btnBudget.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
-            startActivity(intent);
-        });
+//        // Sự kiện click cho nút "Wallet"
+//        btnWallet.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
+//            startActivity(intent);
+//                });
+//        // Sự kiện click cho nút "Budget"
+//        btnBudget.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
+//            startActivity(intent);
+//        });
         // Sự kiện click cho nút "Lịch sử"
         btnHistoryTrade.setOnClickListener(v -> {
             Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
