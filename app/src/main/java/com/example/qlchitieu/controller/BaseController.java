@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.qlchitieu.data.db.dao.BaseDAO;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
+import com.example.qlchitieu.helpers.Helpers;
+import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -12,17 +14,22 @@ public abstract class BaseController<T,DAO extends BaseDAO<T>, FBase extends Bas
     protected DAO dao;
     protected FBase fBase;
     protected FirebaseFirestore firebaseDB;
-    Context context;
+    protected SharedPrefHelper sharedPrefHelper;
+    protected Helpers helper;
 
-    public BaseController(DAO dao){
+    public BaseController(Context context, DAO dao){
         this.dao = dao;
         this.firebaseDB = FirebaseFirestore.getInstance();
+        this.sharedPrefHelper = new SharedPrefHelper(context);
+        this.helper = new Helpers(context);
     }
 
-    public BaseController(DAO dao, FBase fBase){
+    public BaseController(Context context, DAO dao, FBase fBase){
         this.dao = dao;
         this.firebaseDB = FirebaseFirestore.getInstance();
         this.fBase = fBase;
+        this.sharedPrefHelper = new SharedPrefHelper(context);
+        this.helper = new Helpers(context);
     }
 
     public long insert(T entity){

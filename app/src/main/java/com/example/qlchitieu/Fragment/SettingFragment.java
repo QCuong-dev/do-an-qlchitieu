@@ -23,6 +23,7 @@ import com.example.qlchitieu.Activites.ChangePasswordActivity;
 import com.example.qlchitieu.Activites.HistoryActivity;
 import com.example.qlchitieu.Activites.SigninActivity;
 import com.example.qlchitieu.R;
+import com.example.qlchitieu.controller.WalletController;
 import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -38,6 +39,7 @@ public class SettingFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private WalletController walletController;
     private Helpers helper;
 
     // TODO: Rename and change types of parameters
@@ -71,6 +73,7 @@ public class SettingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Init
         helper = new Helpers(requireContext());
+        walletController = new WalletController(requireContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -200,6 +203,6 @@ public class SettingFragment extends Fragment {
         // Dữ liệu giả (từ XML) đã được hiển thị, bạn có thể cập nhật
         // nếu cần dữ liệu động
         tvUserName.setText("Nguyễn Văn A (Updated)");
-        tvMonthlyAmount.setText("30.000.000 VND");
+        tvMonthlyAmount.setText(walletController.getWallet() + " VND");
     }
 }

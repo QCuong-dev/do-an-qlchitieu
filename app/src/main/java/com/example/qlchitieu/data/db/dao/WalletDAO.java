@@ -43,4 +43,13 @@ public class WalletDAO extends BaseDAO<Wallet> {
         wallet.setCurrency(cursor.getString(cursor.getColumnIndexOrThrow("currency")));
         return wallet;
     }
+
+    public Wallet getWalletByUserId(int idUser){
+        Cursor cursor = db.query(getTableName(),null,"user_id = ?",new String[]{String.valueOf(idUser)},null,null,null,null);
+        if(cursor.moveToFirst()){
+            return parseCursor(cursor);
+        }
+
+        return null;
+    }
 }

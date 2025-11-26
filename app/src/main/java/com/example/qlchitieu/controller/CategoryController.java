@@ -14,11 +14,8 @@ import com.example.qlchitieu.model.Category;
 import java.util.UUID;
 
 public class CategoryController extends BaseController<Category,CategoryDAO, CategoryFirebase> {
-    private SharedPrefHelper sharedPrefHelper;
     public CategoryController(Context context){
-        super(new CategoryDAO(DBHelper.getInstance(context).getWritableDatabase()),new CategoryFirebase());
-        this.context = context;
-        sharedPrefHelper = new SharedPrefHelper(context);
+        super(context, new CategoryDAO(DBHelper.getInstance(context).getWritableDatabase()),new CategoryFirebase());
     }
 
     public void saveCategory(String name, BaseFirebase.DataCallback<String> callback){

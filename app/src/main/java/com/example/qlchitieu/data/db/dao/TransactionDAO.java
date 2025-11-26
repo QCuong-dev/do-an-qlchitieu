@@ -19,7 +19,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
 
     @Override
     protected String getTableName() {
-        return "Transaction";
+        return "`Transaction`";
     }
 
     @Override

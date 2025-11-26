@@ -24,13 +24,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UserController extends BaseController<User,UserDAO, UserFirebase> {
-    private SharedPrefHelper sharedPrefHelper;
-    private Helpers helper;
-
     public UserController(Context context){
-        super(new UserDAO(DBHelper.getInstance(context).getWritableDatabase()),new UserFirebase());
-        sharedPrefHelper = new SharedPrefHelper(context);
-        helper = new Helpers(context);
+        super(context, new UserDAO(DBHelper.getInstance(context).getWritableDatabase()),new UserFirebase());
     }
 
     // Handle Login
@@ -145,6 +140,52 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
         sharedPrefHelper.saveBoolean("isLogin",true);
 
         Log.d("SHARED_PREF", "User saved to SharedPreferences: " + user.getName() + " - " + user.getEmail());
+    }
+
+    public void handleChangePassword(String oldPassword,String newPassword, String confirmNewPassword, BaseFirebase.DataCallback<String> callback){
+        User user;
+        int userId = sharedPrefHelper.getInt("idUser",0);
+        // Check user exits
+        if(!dao.exist("id",String.valueOf(userId))){
+            callback.onFailure("Không tìm thấy User");
+            return;
+        }
+        user = dao.getById(userId);
+
+        // Check valiadate
+        if(!isTheFirstLoginGoogle()){
+            if(user.getPassword() != oldPassword){
+                callback.onFailure("Mật khẩu cũ không đúng");
+                return;
+            }
+        }
+        if(newPassword.length() <6 || newPassword.length() >= 20){
+            callback.onFailure("Mật khẩu có độ dài từ 6-20");
+            return;
+        }
+        if(!newPassword.equals(confirmNewPassword)){
+            callback.onFailure("Mật khẩu mới không khớp");
+            return;
+        }
+        user.setPassword(newPassword);
+        // Save local
+        dao.update(user,"id = ?", new String[]{String.valueOf(userId)});
+        // Save firebase
+        fBase.updateDocument(user.getUuid(), user, new BaseFirebase.DataCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                callback.onSuccess("Đổi mật khẩu thành công");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure("Lỗi khi lưu mật khẩu vào FB");
+            }
+        });
+    }
+
+    public boolean isTheFirstLoginGoogle(){
+        return dao.getById(sharedPrefHelper.getInt("idUser",0)).getPassword().equals("GOOGLE_USER")?true:false;
     }
 
     // UserController.java

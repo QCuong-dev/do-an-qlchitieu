@@ -12,6 +12,6 @@ import com.example.qlchitieu.model.Transaction;
 
 public class BudgetController extends BaseController<Budget, BudgetDAO, BudgetFirebase> {
     public BudgetController(Context context) {
-        super(new BudgetDAO(DBHelper.getInstance(context).getWritableDatabase()), new BudgetFirebase());
+        super(context,new BudgetDAO(DBHelper.getInstance(context).getWritableDatabase()), new BudgetFirebase());
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -21,15 +22,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.qlchitieu.R;
+import com.example.qlchitieu.controller.CategoryController;
+import com.example.qlchitieu.controller.TransactionController;
+import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.databinding.ActivityAddChitieuBinding;
+import com.example.qlchitieu.databinding.ItemCategoryTransactionBinding;
+import com.example.qlchitieu.model.Category;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class AddChitieuActivity extends AppCompatActivity {
 
     private ActivityAddChitieuBinding binding;
+    private CategoryController categoryController;
+    private TransactionController transactionController;
 
     // --- PHẦN THÊM MỚI ĐỂ XỬ LÝ KẾT QUẢ TỪ CAMERA/GALLERY ---
 
@@ -66,6 +76,8 @@ public class AddChitieuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddChitieuBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
+        categoryController = new CategoryController(this);
+        transactionController = new TransactionController(this);
         setContentView(binding.getRoot());
 
         // Cài đặt ngày giờ hiện tại làm mặc định
@@ -73,6 +85,9 @@ public class AddChitieuActivity extends AppCompatActivity {
 
         // Thêm sự kiện click cho các nút
         setupClickListeners();
+
+        // Render categories
+        loadCategories();
     }
 
     /**
@@ -131,18 +146,20 @@ public class AddChitieuActivity extends AppCompatActivity {
         }
 
         // Tạo một thông báo Toast để hiển thị kết quả
-        String result = "Đã lưu: \n" +
-                "Số tiền: " + amountString + "\n" +
-                "Danh mục: " + category + "\n" +
-                "Ngày: " + date + "\n" +
-                "Giờ: " + time + "\n" +
-                "Ghi chú: " + note;
+        transactionController.saveTransaction(Integer.parseInt(amountString), Integer.parseInt(category), note, date, time, binding.snpOption.getSelectedItem().toString(), new BaseFirebase.DataCallback<String>() {
+            @Override
+            public void onSuccess(String data) {
+                Toast.makeText(AddChitieuActivity.this, data, Toast.LENGTH_SHORT).show();
+            }
 
-        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(AddChitieuActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        // TODO: Thêm logic lưu dữ liệu này vào Database (SQLite, Room...)
         // Sau khi lưu thành công, bạn có thể gọi finish()
-        // finish();
+         finish();
     }
 
     /**
@@ -154,9 +171,70 @@ public class AddChitieuActivity extends AppCompatActivity {
         int selectedChipId = binding.chipGroupCategories.getCheckedChipId();
         if (selectedChipId != -1) {
             Chip selectedChip = findViewById(selectedChipId);
-            return selectedChip.getText().toString();
+            return selectedChip.getTag().toString();
         }
         return null; // Không có chip nào được chọn
+    }
+
+    private void loadCategories() {
+        List<Category> list = categoryController.getAll();
+        String firstCategoryId = null; // Biến lưu ID của Chip đầu tiên
+
+        for(int i = 0 ; i < list.size() ; i++){
+            Category category = list.get(i);
+
+            if (i == 0) {
+                firstCategoryId = String.valueOf(category.getId());
+            }
+
+            addCategoryToLayout(category);
+        }
+
+        if (firstCategoryId != null) {
+
+            com.google.android.material.chip.ChipGroup chipGroup = binding.chipGroupCategories;
+            int chipToSelectId = View.NO_ID;
+
+            for (int j = 0; j < chipGroup.getChildCount(); j++) {
+                View child = chipGroup.getChildAt(j);
+                if (child instanceof com.google.android.material.chip.Chip) {
+                    com.google.android.material.chip.Chip chip = (com.google.android.material.chip.Chip) child;
+
+                    if (firstCategoryId.equals(chip.getTag())) {
+                        chipToSelectId = chip.getId();
+                        break;
+                    }
+                }
+            }
+
+            // Chỉ gọi check(id) nếu tìm thấy ID View hợp lệ
+            if (chipToSelectId != View.NO_ID) {
+                chipGroup.check(chipToSelectId);
+            } else {
+                Log.e("CategoryFragment", "Không tìm thấy Chip đầu tiên để chọn với ID: " + firstCategoryId);
+            }
+        }
+    }
+
+    // KHÔNG SỬA ĐỔI PHƯƠNG THỨC NÀY
+    private void addCategoryToLayout(Category category){
+        ChipGroup chipGroup = binding.chipGroupCategories;
+
+        ItemCategoryTransactionBinding itemBinding =
+                ItemCategoryTransactionBinding.inflate(getLayoutInflater(), chipGroup, false);
+
+        Chip newChip = itemBinding.getRoot();
+
+        newChip.setText(category.getName());
+        newChip.setTag(category.getId());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            newChip.setId(View.generateViewId());
+        } else {
+            newChip.setId((int) System.currentTimeMillis());
+        }
+
+        chipGroup.addView(newChip);
     }
 
     /**

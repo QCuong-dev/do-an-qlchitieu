@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import android.content.Intent;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -72,5 +73,10 @@ public class Helpers {
             return  true;
         }
         return false;
+    }
+
+    public String formatCurrency(long amount){
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi","VN"));
+        return nf.format(amount);
     }
 }
