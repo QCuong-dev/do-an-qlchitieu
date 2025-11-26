@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.qlchitieu.Activites.AddBudgetActivity;
 import com.example.qlchitieu.Activites.AddChitieuActivity;
+import com.example.qlchitieu.Activites.AddEditWalletActivity;
 import com.example.qlchitieu.Activites.BienDongActivity;
 import com.example.qlchitieu.Activites.GiaoDichDinhKyActivity;
 import com.example.qlchitieu.Activites.HoTroActivity;
+import com.example.qlchitieu.Activites.MainActivity;
 import com.example.qlchitieu.Activites.SigninActivity;
 import com.example.qlchitieu.Activites.SignupActivity;
+import com.example.qlchitieu.LabelFormatter;
 import com.example.qlchitieu.R;
+import com.example.qlchitieu.controller.TransactionController;
+import com.example.qlchitieu.controller.WalletController;
+import com.example.qlchitieu.helpers.Helpers;
+import com.example.qlchitieu.model.Transaction;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -58,6 +67,9 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private WalletController walletController;
+    private TransactionController transactionController;
+    private Helpers helper;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -84,6 +96,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        walletController = new WalletController(requireContext());
+        transactionController = new TransactionController(requireContext());
+        helper = new Helpers(requireContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -102,11 +117,11 @@ public class HomeFragment extends Fragment {
     private Button btnThemGD;
 
     private ImageView  btnHeadset, btnClose;
-    private LinearLayout btnBienDongThuChi, btnGiaoDichDinhKy, btnTienIchKhac;
+    private LinearLayout btnAddWallet, btnAddChitieu,btnChatbox, btnTienIchKhac;
 
     // === CÁC BIẾN MỚI CHO LOGIC THÁNG ===
     private ImageView ivMonthPrev, ivMonthNext;
-    private TextView tvCurrentMonth, tvTotalExpense, tvTotalIncome;
+    private TextView tvCurrentMonth, tvTotalExpense, tvTotalIncome, tvThongbao;;
 
     private Calendar currentCalendar; // Biến để theo dõi tháng đang chọn
     private SimpleDateFormat monthFormatter; // Định dạng "Tháng 11/2025"
@@ -121,8 +136,9 @@ public class HomeFragment extends Fragment {
         btnThemGD = view.findViewById(R.id.btnThemGD);
 
         btnHeadset = view.findViewById(R.id.btn_headset);
-        btnBienDongThuChi = view.findViewById(R.id.btnThuChiTheoThang);
-        btnGiaoDichDinhKy = view.findViewById(R.id.btnGiaoDichDinhKy);
+        btnAddWallet = view.findViewById(R.id.btnAddWallet);
+        btnAddChitieu = view.findViewById(R.id.btnChitieuchitiet);
+        btnChatbox = view.findViewById(R.id.btnChatbox);
         btnTienIchKhac = view.findViewById(R.id.btnTienichkhac);
 
         // === ÁNH XẠ CÁC VIEW MỚI ===
@@ -131,6 +147,7 @@ public class HomeFragment extends Fragment {
         tvCurrentMonth = view.findViewById(R.id.tvCurrentMonth);
         tvTotalExpense = view.findViewById(R.id.tvTotalExpense);
         tvTotalIncome = view.findViewById(R.id.tvTotalIncome);
+        tvThongbao = view.findViewById(R.id.tvThongbao);
 
         // === KHỞI TẠO CÁC BIẾN LOGIC ===
         currentCalendar = Calendar.getInstance(); // Lấy ngày giờ hiện tại
@@ -146,8 +163,6 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-
         addClickEvents();
 
         setupBarChart();
@@ -156,6 +171,20 @@ public class HomeFragment extends Fragment {
         setupMonthNavigation();
 
         updateDashboard();
+
+        initView();
+    }
+
+    private void initView(){
+        tvTotalIncome.setText(walletController.getCurrentWallet());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // Use appropriate Locale
+        String formattedDate = sdf.format(currentCalendar.getTime());
+        int result = 0;
+        for(Transaction t : transactionController.getListByMonth(formattedDate)){
+            if(t.getType() != "income") result -= (int)t.getAmount();
+        }
+        tvTotalExpense.setText(helper.formatCurrency(result));
     }
 
     private void setupMonthNavigation() {
@@ -172,7 +201,34 @@ public class HomeFragment extends Fragment {
 
     // === HÀM MỚI: CẬP NHẬT GIAO DIỆN KHI ĐỔI THÁNG ===
     private void updateDashboard() {
-        // 1. Cập nhật TextView tháng
+//        // 1. Cập nhật TextView tháng
+//        Calendar today = Calendar.getInstance();
+//        if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+//                currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
+//            tvCurrentMonth.setText("Tháng này");
+//        } else {
+//            String monthText = monthFormatter.format(currentCalendar.getTime());
+//            // Viết hoa chữ cái đầu cho "Tháng..."
+//            monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
+//            tvCurrentMonth.setText(monthText);
+//        }
+//
+//        // 2. Lấy dữ liệu (THAY THẾ BẰNG LOGIC CỦA BẠN)
+//        int year = currentCalendar.get(Calendar.YEAR);
+//        int month = currentCalendar.get(Calendar.MONTH); // Lưu ý: Tháng 0-indexed (0=Tháng 1)
+//
+//        // Dùng hàm dữ liệu giả để minh họa
+//        long[] data = getFakeDataForMonth(year, month);
+//        long income = data[0];
+//        long expense = data[1];
+//
+//        // 3. Cập nhật TextView thu/chi
+//        tvTotalIncome.setText(currencyFormatter.format(income));
+//        tvTotalExpense.setText(currencyFormatter.format(expense));
+//
+//        // 4. (Tùy chọn) Tải lại biểu đồ BarChart với dữ liệu của tháng mới
+//        // loadBarChartData(year, month);
+        // 1. Cập nhật TextView tháng (Giữ nguyên)
         Calendar today = Calendar.getInstance();
         if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
                 currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
@@ -184,20 +240,68 @@ public class HomeFragment extends Fragment {
             tvCurrentMonth.setText(monthText);
         }
 
-        // 2. Lấy dữ liệu (THAY THẾ BẰNG LOGIC CỦA BẠN)
+        // 2. Lấy dữ liệu
         int year = currentCalendar.get(Calendar.YEAR);
-        int month = currentCalendar.get(Calendar.MONTH); // Lưu ý: Tháng 0-indexed (0=Tháng 1)
+        int month = currentCalendar.get(Calendar.MONTH);
 
         // Dùng hàm dữ liệu giả để minh họa
-        long[] data = getFakeDataForMonth(year, month);
-        long income = data[0];
-        long expense = data[1];
+        long[] currentMonthData = getFakeDataForMonth(year, month);
+        long currentIncome = currentMonthData[0];
+        long currentExpense = currentMonthData[1];
 
-        // 3. Cập nhật TextView thu/chi
-        tvTotalIncome.setText(currencyFormatter.format(income));
-        tvTotalExpense.setText(currencyFormatter.format(expense));
+        // Lấy dữ liệu tháng trước
+        Calendar prevCalendar = (Calendar) currentCalendar.clone();
+        prevCalendar.add(Calendar.MONTH, -1);
+        long[] prevMonthData = getFakeDataForMonth(prevCalendar.get(Calendar.YEAR), prevCalendar.get(Calendar.MONTH));
+        long prevExpense = prevMonthData[1]; // Chỉ so sánh chi tiêu để minh họa
 
-        // 4. (Tùy chọn) Tải lại biểu đồ BarChart với dữ liệu của tháng mới
+        // 3. Cập nhật TextView thu/chi (Giữ nguyên)
+        tvTotalIncome.setText(currencyFormatter.format(currentIncome));
+        tvTotalExpense.setText(currencyFormatter.format(currentExpense));
+
+        // 4. LOGIC CẬP NHẬT TVTHONGBAO
+        long expenseDifference = currentExpense - prevExpense; // Lượng thay đổi chi tiêu so với tháng trước
+
+        if (expenseDifference > 0) {
+            // Chi tiêu Tăng
+            String diffText = currencyFormatter.format(expenseDifference) + "đ";
+            tvThongbao.setText(String.format("Tăng %s so với cùng kỳ tháng trước", diffText));
+
+            // Thiết lập Drawable (Icon) bên trái: ic_trending_up
+            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_up, 0, 0, 0);
+
+            // Cập nhật màu background (tùy chọn)
+            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg); // Giả sử bạn có bg màu đỏ nhạt
+            // Cập nhật màu chữ (tùy chọn)
+            tvThongbao.setTextColor(Color.rgb(185, 28, 28)); // Màu đỏ đậm
+
+        } else if (expenseDifference < 0) {
+            // Chi tiêu Giảm
+            long absoluteDifference = Math.abs(expenseDifference);
+            String diffText = currencyFormatter.format(absoluteDifference) + "đ";
+            tvThongbao.setText(String.format("Giảm %s so với cùng kỳ tháng trước", diffText));
+
+            // Thiết lập Drawable (Icon) bên trái: ic_trending_down
+            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_down, 0, 0, 0);
+
+            // Cập nhật màu background (tùy chọn)
+            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg); // Giả sử bạn có bg màu xanh lá nhạt
+            // Cập nhật màu chữ (tùy chọn)
+            tvThongbao.setTextColor(Color.rgb(4, 120, 87)); // Màu xanh lá đậm
+
+        } else {
+            // Chi tiêu Không đổi
+            tvThongbao.setText("Chi tiêu tháng này bằng tháng trước");
+
+            // Sử dụng một icon trung tính hoặc ẩn
+            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+            // Thiết lập màu trung tính (ví dụ: nền xám nhạt)
+            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
+            tvThongbao.setTextColor(Color.rgb(55, 65, 81)); // Màu chữ xám/đen
+        }
+
+        // 5. (Tùy chọn) Tải lại biểu đồ BarChart với dữ liệu của tháng mới
         // loadBarChartData(year, month);
     }
 
@@ -223,36 +327,43 @@ public class HomeFragment extends Fragment {
         });
 
         // Quick Actions
-        btnBienDongThuChi.setOnClickListener(new View.OnClickListener() {
+        btnAddWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), BienDongActivity.class);
+                Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
                 startActivity(intent);
             }
         });
 
-        btnGiaoDichDinhKy.setOnClickListener(new View.OnClickListener() {
+        btnAddChitieu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // CẬP NHẬT: Mở GiaoDichDinhKyActivity
-                Intent intent = new Intent(getActivity(), GiaoDichDinhKyActivity.class);
-                startActivity(intent);
+                if (getActivity() instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    // Gọi phương thức public từ MainActivity để thực hiện hành động
+                    mainActivity.showBottomNavigationTab(2, true);
+                }
+            }
+        });
+
+        btnChatbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    // Gọi phương thức public từ MainActivity để thực hiện hành động
+                    mainActivity.showBottomNavigationTab(3, true);
+                }
             }
         });
 
         btnTienIchKhac.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getActivity() != null) {
-                    SettingFragment settingFragment = new SettingFragment();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    // Thay thế layout container của bạn (ví dụ R.id.fragment_container)
-                    // bằng fragment mới và thêm vào backstack
-                    fragmentTransaction.replace(R.id.container, settingFragment); // <-- THAY ID NÀY
-                    fragmentTransaction.addToBackStack(null); // Để nút back quay lại HomeFragment
-                    fragmentTransaction.commit();
+                if (getActivity() instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) getActivity();
+                    // Gọi phương thức public từ MainActivity để thực hiện hành động
+                    mainActivity.showBottomNavigationTab(4, true);
                 }
             }
         });
@@ -275,6 +386,7 @@ public class HomeFragment extends Fragment {
         xAxis.setDrawGridLines(false); // Tắt đường lưới trục X
 
         // Tùy chỉnh trục Y bên trái
+        xAxis.setValueFormatter(new LabelFormatter());
         barChart.getAxisLeft().setDrawGridLines(true); // Bật đường lưới trục Y (mờ)
 
         // Bật và tùy chỉnh Chú thích (Legend)

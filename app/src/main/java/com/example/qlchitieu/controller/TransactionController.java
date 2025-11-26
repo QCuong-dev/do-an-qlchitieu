@@ -1,6 +1,7 @@
 package com.example.qlchitieu.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.data.db.dao.TransactionDAO;
@@ -11,13 +12,17 @@ import com.example.qlchitieu.data.db.firebase.UserFirebase;
 import com.example.qlchitieu.model.Transaction;
 import com.example.qlchitieu.model.Wallet;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TransactionController extends BaseController<Transaction, TransactionDAO, TransactionFirebase> {
     private WalletController walletController;
     public TransactionController(Context context) {
         super(context, new TransactionDAO(DBHelper.getInstance(context).getWritableDatabase()), new TransactionFirebase());
-        walletController = new WalletController(context);
+    }
+
+    public void setWalletController(WalletController walletController) {
+        this.walletController = walletController;
     }
 
     public void saveTransaction(int amount,int categoryId, String note, String date,String time, String type, BaseFirebase.DataCallback<String> callback){
@@ -59,7 +64,7 @@ public class TransactionController extends BaseController<Transaction, Transacti
         transaction.setUuid(uuid);
         transaction.setType(type);
         transaction.setNote(note);
-        transaction.setDate(date + ":" + time);
+        transaction.setDate(helper.convertDateFormatQuery(date) + ":" + time);
         transaction.setCategory_id(categoryId);
         transaction.setWallet_id(wallet.getId());
         transaction.setAmount(amount);
@@ -84,5 +89,17 @@ public class TransactionController extends BaseController<Transaction, Transacti
                 callback.onFailure("Lỗi khi lưu giao dịch vào FB");
             }
         });
+    }
+
+    public List<Transaction> getListByDate(String date){
+        return dao.getListByDate(date);
+    }
+
+    public List<Transaction> getListByIdWallet(int idWallet){
+        return dao.getListByIdWallet(idWallet);
+    }
+
+    public List<Transaction> getListByMonth(String date){
+        return dao.getListByMonth(date);
     }
 }

@@ -273,7 +273,7 @@ public class AddChitieuActivity extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String dateString = String.format(Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
+        String dateString = String.format(Locale.getDefault(), "%02d-%02d-%d", day, month + 1, year);
         binding.tvDate.setText(dateString);
 
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -290,7 +290,7 @@ public class AddChitieuActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String dateString = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear);
+                    String dateString = String.format(Locale.getDefault(), "%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear);
                     binding.tvDate.setText(dateString);
                 }, year, month, day);
         datePickerDialog.show();

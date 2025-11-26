@@ -5,6 +5,9 @@ public class Transaction {
     private String uuid,note,date,type,created_at;
     private float amount;
 
+    // JOIN TABLE Category
+    private String category_name;
+
     public Transaction(){}
 
     public Transaction(int wallet_id, int category_id, String uuid, String note, String date, String type, float amount) {
@@ -87,5 +90,13 @@ public class Transaction {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public String getCategory_name() {
+        return category_name;
+    }
+
+    public void setCategory_name(String category_name) {
+        this.category_name = category_name;
     }
 }

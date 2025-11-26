@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,9 @@ import com.example.qlchitieu.Adapter.CalendarAdapter;
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.Transaction;
 import com.example.qlchitieu.Adapter.TransactionAdapter;
+import com.example.qlchitieu.controller.TransactionController;
 import com.example.qlchitieu.databinding.FragmentCalendarBinding;
+import com.example.qlchitieu.helpers.Helpers;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -33,13 +36,14 @@ import java.util.List;
  * Use the {@link CalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener {
+public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener,TransactionAdapter.OnItemLongClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private Helpers helper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,6 +61,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private RecyclerView transactionRecyclerView;
     private TransactionAdapter transactionAdapter;
     private List<Transaction> allTransactions;
+    private TransactionController transactionController;
 
 
 
@@ -85,6 +90,8 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        transactionController = new TransactionController(requireContext());
+        helper = new Helpers(requireContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -126,6 +133,9 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     private void initTransactionRecyclerView() {
         // SỬA LỖI: dùng requireContext() thay cho 'this'
         transactionAdapter = new TransactionAdapter(new ArrayList<>(), requireContext());
+
+        transactionAdapter.setOnItemLongClickListener(this);
+
         binding.recyclerViewTransactions.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewTransactions.setAdapter(transactionAdapter);
         binding.recyclerViewTransactions.setNestedScrollingEnabled(false);
@@ -139,23 +149,52 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         LocalDate tomorrow = today.plusDays(1);
 
         // Dữ liệu cho hôm nay
-        allTransactions.add(new Transaction("Ăn uống", 50000, "expense", R.drawable.ic_chatbox, today));
-        allTransactions.add(new Transaction("Lương tháng 11", 5000000, "income", R.drawable.ic_home, today));
-        allTransactions.add(new Transaction("Đi chợ", 150000, "expense", R.drawable.ic_grid, today));
-        allTransactions.add(new Transaction("Xem phim", 200000, "expense", R.drawable.ic_calendar, yesterday));
-        allTransactions.add(new Transaction("Xăng xe", 70000, "expense", R.drawable.ic_chatbox, yesterday));
-        allTransactions.add(new Transaction("Tiền nhà", 2000000, "expense", R.drawable.ic_home, tomorrow));
+//        for(com.example.qlchitieu.model.Transaction t : transactionController.getListByDate(today.toString())){
+//            String[] date = t.getDate().split(":");
+//            allTransactions.add(new Transaction(t.getCategory_name(),t.getAmount(),t.getType(),0,LocalDate.parse(date[0])));
+//        }
+//        allTransactions.add(new Transaction("Ăn uống", 50000, "expense", R.drawable.ic_chatbox, today));
+//        allTransactions.add(new Transaction("Lương tháng 11", 5000000, "income", R.drawable.ic_home, today));
+//        allTransactions.add(new Transaction("Đi chợ", 150000, "expense", R.drawable.ic_grid, today));
+//        allTransactions.add(new Transaction("Xem phim", 200000, "expense", R.drawable.ic_calendar, yesterday));
+//        allTransactions.add(new Transaction("Xăng xe", 70000, "expense", R.drawable.ic_chatbox, yesterday));
+//        allTransactions.add(new Transaction("Tiền nhà", 2000000, "expense", R.drawable.ic_home, tomorrow));
     }
 
     private void updateTransactionList(LocalDate date) {
         List<Transaction> filteredList = new ArrayList<>();
-        if (allTransactions == null) return;
+        int income = 0;
+        int expense = 0;
+        int total = 0;
+//        if (allTransactions == null) return;
+        allTransactions.clear();
+
+        // Transaction day
+        for(com.example.qlchitieu.model.Transaction t : transactionController.getListByDate(date.toString())){
+            // Caculator income and expense
+            if(t.getType().equals("income")){
+                income += (int)t.getAmount();
+            }else {
+                expense += (int) t.getAmount();
+            }
+
+            String[] dateTransaction = t.getDate().split(":");
+            allTransactions.add(new Transaction(t.getCategory_name(),t.getAmount(),t.getType(),0,LocalDate.parse(dateTransaction[0])));
+        }
 
         for (Transaction transaction : allTransactions) {
             if (transaction.getDate().equals(date)) {
                 filteredList.add(transaction);
             }
         }
+
+        // Transaction button
+        total = income - expense;
+        binding.tvIncome.setText(helper.formatCurrency(income) + " VND");
+        binding.tvExpense.setText("-" + helper.formatCurrency(expense) + " VND");
+        binding.tvTotal.setText(helper.formatCurrency(total) + " VND");
+
+
         transactionAdapter.filterList(filteredList);
     }
 
@@ -237,5 +276,45 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onItemLongClick(int position, Transaction transaction) {
+        if (allTransactions == null || transaction == null) {
+            Toast.makeText(requireContext(), "Lỗi: Dữ liệu giao dịch không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 1. Khởi tạo AlertDialog.Builder
+        new android.app.AlertDialog.Builder(requireContext())
+                .setTitle("Xác nhận Xóa Giao Dịch")
+                .setMessage("Bạn có chắc chắn muốn xóa giao dịch '" + transaction.getCategoryName() + "' không?")
+
+                // 2. Nút "CÓ" (Xóa)
+                .setPositiveButton("CÓ (Xóa)", (dialog, which) -> {
+                    // Logic xóa giao dịch khi người dùng xác nhận
+                    boolean removed = allTransactions.remove(transaction);
+
+                    if (removed) {
+                        // Cập nhật lại danh sách hiển thị
+                        updateTransactionList(selectedDate);
+
+                        String message = "Đã xóa thành công giao dịch: " + transaction.getCategoryName();
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "Lỗi: Không tìm thấy giao dịch để xóa.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+
+                // 3. Nút "KHÔNG" (Hủy)
+                .setNegativeButton("KHÔNG (Hủy)", (dialog, which) -> {
+                    // Không làm gì cả, chỉ đóng dialog
+                    dialog.dismiss();
+                    Toast.makeText(requireContext(), "Đã hủy thao tác xóa.", Toast.LENGTH_SHORT).show();
+                })
+
+                // 4. Hiển thị Dialog
+                .setIcon(android.R.drawable.ic_dialog_alert) // Biểu tượng cảnh báo
+                .show();
     }
 }

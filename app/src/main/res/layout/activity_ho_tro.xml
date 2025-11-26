@@ -10,9 +10,9 @@
 
     <RelativeLayout
         android:id="@+id/rlToolbar"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary">
+        android:layout_height="?attr/actionBarSize">
 
         <ImageView
             android:id="@+id/ivBack"
@@ -22,13 +22,12 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
             android:padding="8dp"
-            app:tint="@color/white" />
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hỗ trợ"
-            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_centerInParent="true" />
@@ -37,6 +36,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_below="@id/rlToolbar">
 
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:id="@+id/btnGoiTongDai"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Gọi tổng đài (1900 xxxx)"
+                android:text="Gọi tổng đài 0774952891 (A.Cường)"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_marginTop="8dp"/>
         </LinearLayout>

@@ -14,6 +14,8 @@ import android.content.Intent;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -58,6 +60,14 @@ public class Helpers {
 
     public String getCurrentDate() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    }
+
+    public String convertDateFormatQuery(String inputDate){
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.getDefault());
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault());
+
+        LocalDate inputLocalDate = LocalDate.parse(inputDate, inputFormatter);
+        return outputFormatter.format(inputLocalDate);
     }
 
     public boolean handleIsLogin(){

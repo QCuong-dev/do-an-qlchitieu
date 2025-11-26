@@ -45,6 +45,7 @@ public class SettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private SharedPrefHelper sharedPrefHelper;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -74,6 +75,7 @@ public class SettingFragment extends Fragment {
         // Init
         helper = new Helpers(requireContext());
         walletController = new WalletController(requireContext());
+        sharedPrefHelper = new SharedPrefHelper(requireContext());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -89,7 +91,7 @@ public class SettingFragment extends Fragment {
 
     private TextView tvUserName, tvMonthlyAmount;
     private ShapeableImageView ivAvatar;
-    private ConstraintLayout btnAccount, btnChangePassword, btnHistoryTrade, btnLogout, btnBudget,btnWallet;
+    private ConstraintLayout btnAccount, btnChangePassword, btnLogout, btnBudget,btnWallet;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -113,10 +115,10 @@ public class SettingFragment extends Fragment {
         // Các nút chức năng
         btnAccount = view.findViewById(R.id.btnAccount);
         btnChangePassword = view.findViewById(R.id.btnChangePassword);
-        btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
+//        btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
         btnLogout = view.findViewById(R.id.btnLogout);
-        btnBudget = view.findViewById(R.id.btnBudget);
-        btnWallet =  view.findViewById(R.id.btnWallet);
+//        btnBudget = view.findViewById(R.id.btnBudget);
+//        btnWallet =  view.findViewById(R.id.btnWallet);
     }
 
     /**
@@ -138,23 +140,23 @@ public class SettingFragment extends Fragment {
             Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
-        // Sự kiện click cho nút "Wallet"
-        btnWallet.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
-            startActivity(intent);
-                });
-        // Sự kiện click cho nút "Budget"
-        btnBudget.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
-            startActivity(intent);
-        });
-        // Sự kiện click cho nút "Lịch sử"
-        btnHistoryTrade.setOnClickListener(v -> {
-            Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
-            // Mở màn hình HistoryActivity
-            Intent intent = new Intent(getActivity(), HistoryActivity.class);
-            startActivity(intent);
-        });
+//        // Sự kiện click cho nút "Wallet"
+//        btnWallet.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
+//            startActivity(intent);
+//                });
+//        // Sự kiện click cho nút "Budget"
+//        btnBudget.setOnClickListener(v -> {
+//            Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
+//            startActivity(intent);
+//        });
+//        // Sự kiện click cho nút "Lịch sử"
+//        btnHistoryTrade.setOnClickListener(v -> {
+//            Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
+//            // Mở màn hình HistoryActivity
+//            Intent intent = new Intent(getActivity(), HistoryActivity.class);
+//            startActivity(intent);
+//        });
 
         // Sự kiện click cho nút "Đăng xuất"
         btnLogout.setOnClickListener(v -> {
@@ -202,7 +204,7 @@ public class SettingFragment extends Fragment {
 
         // Dữ liệu giả (từ XML) đã được hiển thị, bạn có thể cập nhật
         // nếu cần dữ liệu động
-        tvUserName.setText("Nguyễn Văn A (Updated)");
+        tvUserName.setText(sharedPrefHelper.getString("nameUser",""));
         tvMonthlyAmount.setText(walletController.getWallet() + " VND");
     }
 }

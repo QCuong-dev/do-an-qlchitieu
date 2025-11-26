@@ -155,7 +155,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thu Nhập"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1.000.000 VND" android:textColor="#0000FF" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvIncome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1.000.000 VND" android:textColor="#0000FF" android:textStyle="bold"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -164,7 +164,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chi Tiêu"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-450.000 VND" android:textColor="#FF0000" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-450.000 VND" android:textColor="#FF0000" android:textStyle="bold"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -173,7 +173,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tổng"/>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="550.000 VND" android:textColor="#008000" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="550.000 VND" android:textColor="#008000" android:textStyle="bold"/>
                 </LinearLayout>
             </LinearLayout>
 

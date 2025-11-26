@@ -7,13 +7,18 @@ import com.example.qlchitieu.data.db.dao.WalletDAO;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.data.db.firebase.WalletFirebase;
 import com.example.qlchitieu.helpers.SharedPrefHelper;
+import com.example.qlchitieu.model.Transaction;
 import com.example.qlchitieu.model.Wallet;
 
 import java.util.UUID;
 
 public class WalletController extends BaseController<Wallet, WalletDAO, WalletFirebase> {
+    private final TransactionController transactionController;
     public WalletController(Context context) {
         super(context, new WalletDAO(DBHelper.getInstance(context).getWritableDatabase()), new WalletFirebase());
+        this.transactionController = new TransactionController(context);
+        // 2. Phá vỡ vòng lặp: Inject chính WalletController này vào TransactionController
+        this.transactionController.setWalletController(this);
     }
 
     public String getWallet(){
@@ -22,7 +27,28 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
 
         Wallet wallet = dao.getBy("user_id",String.valueOf(userId));
         if(wallet == null) return "0";
-        return helper.formatCurrency(wallet.getBalance());
+
+        // Get balance from transaction
+        int result = 0;
+        for(Transaction t : transactionController.getListByIdWallet(wallet.getId())){
+            if(t.getType().equals("income")){
+                result += (int)t.getAmount();
+            }else{
+                result -= (int)t.getAmount();
+            }
+        }
+
+        return helper.formatCurrency((wallet.getBalance() + result));
+    }
+
+    public String getCurrentWallet(){
+        int userId = sharedPrefHelper.getInt("idUser",0);
+        if(userId == 0) return "0";
+
+        Wallet wallet = dao.getBy("user_id",String.valueOf(userId));
+        if(wallet == null) return "0";
+
+        return helper.formatCurrency((wallet.getBalance()));
     }
 
     public void saveWallet(int balance, String currency, BaseFirebase.DataCallback<String> callback){
