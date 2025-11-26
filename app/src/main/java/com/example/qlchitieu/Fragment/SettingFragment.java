@@ -86,7 +86,7 @@ public class SettingFragment extends Fragment {
 
     private TextView tvUserName, tvMonthlyAmount;
     private ShapeableImageView ivAvatar;
-    private ConstraintLayout btnAccount, btnChangePassword, btnHistoryTrade, btnLogout, btnBudget,btnWallet;
+    private ConstraintLayout btnAccount, btnChangePassword, btnLogout, btnBudget,btnWallet;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class SettingFragment extends Fragment {
         // Các nút chức năng
         btnAccount = view.findViewById(R.id.btnAccount);
         btnChangePassword = view.findViewById(R.id.btnChangePassword);
-        btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
+//        btnHistoryTrade = view.findViewById(R.id.btnHistoryTrade);
         btnLogout = view.findViewById(R.id.btnLogout);
 //        btnBudget = view.findViewById(R.id.btnBudget);
 //        btnWallet =  view.findViewById(R.id.btnWallet);
@@ -145,13 +145,13 @@ public class SettingFragment extends Fragment {
 //            Intent intent = new Intent(getActivity(), AddBudgetActivity.class);
 //            startActivity(intent);
 //        });
-        // Sự kiện click cho nút "Lịch sử"
-        btnHistoryTrade.setOnClickListener(v -> {
-            Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
-            // Mở màn hình HistoryActivity
-            Intent intent = new Intent(getActivity(), HistoryActivity.class);
-            startActivity(intent);
-        });
+//        // Sự kiện click cho nút "Lịch sử"
+//        btnHistoryTrade.setOnClickListener(v -> {
+//            Log.d("SettingFragment", "Nút Lịch sử được click. Mở HistoryActivity.");
+//            // Mở màn hình HistoryActivity
+//            Intent intent = new Intent(getActivity(), HistoryActivity.class);
+//            startActivity(intent);
+//        });
 
         // Sự kiện click cho nút "Đăng xuất"
         btnLogout.setOnClickListener(v -> {
