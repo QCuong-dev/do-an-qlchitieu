@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +23,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     private List<Transaction> transactionList;
     private Context context;
+    private OnItemLongClickListener onItemLongClickListener;
     private static final DecimalFormat formatter = new DecimalFormat("#,### VND");
 
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position, Transaction transaction);
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.onItemLongClickListener = listener;
+    }
     public TransactionAdapter(List<Transaction> transactionList, Context context) {
         this.transactionList = transactionList;
         this.context = context;
@@ -55,6 +64,20 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             holder.tvAmount.setText("+" + formattedAmount);
             holder.tvAmount.setTextColor(Color.parseColor("#008000")); // Màu xanh lá
         }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (onItemLongClickListener != null) {
+                    // Sử dụng getAdapterPosition() để lấy vị trí chính xác
+                    int currentPosition = holder.getAdapterPosition();
+                    if (currentPosition != RecyclerView.NO_POSITION) {
+                        onItemLongClickListener.onItemLongClick(currentPosition, transactionList.get(currentPosition));
+                        return true; // Trả về true để consume (xử lý) sự kiện
+                    }
+                }
+                return false; // Trả về false nếu không xử lý
+            }
+        });
     }
 
     @Override
