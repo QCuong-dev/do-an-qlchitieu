@@ -17,8 +17,10 @@ import java.util.UUID;
 
 public class TransactionController extends BaseController<Transaction, TransactionDAO, TransactionFirebase> {
     private WalletController walletController;
+    private Context context;
     public TransactionController(Context context) {
         super(context, new TransactionDAO(DBHelper.getInstance(context).getWritableDatabase()), new TransactionFirebase());
+        this.context = context;
     }
 
     public void setWalletController(WalletController walletController) {
@@ -26,6 +28,8 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     public void saveTransaction(int amount,int categoryId, String note, String date,String time, String type, BaseFirebase.DataCallback<String> callback){
+        if(walletController == null) walletController = new WalletController(context);
+
         Transaction transaction = new Transaction();
         String uuid = UUID.randomUUID().toString();
         int idUser = sharedPrefHelper.getInt("idUser",0);

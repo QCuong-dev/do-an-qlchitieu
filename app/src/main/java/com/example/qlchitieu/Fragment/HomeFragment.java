@@ -163,6 +163,8 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
         addClickEvents();
 
         setupBarChart();

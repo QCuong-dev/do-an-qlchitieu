@@ -36,7 +36,7 @@ import java.util.List;
  * Use the {@link CalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener,TransactionAdapter.OnItemLongClickListener {
+public class CalendarFragment extends Fragment implements CalendarAdapter.OnItemListener,TransactionAdapter.OnItemLongClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
