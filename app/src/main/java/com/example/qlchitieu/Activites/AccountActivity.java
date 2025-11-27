@@ -12,11 +12,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.databinding.ActivityAccountBinding;
+import com.example.qlchitieu.helpers.SharedPrefHelper;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class AccountActivity extends AppCompatActivity {
 
     private  ActivityAccountBinding binding;
+    private SharedPrefHelper sharedPrefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class AccountActivity extends AppCompatActivity {
 
         // Khởi tạo binding
         binding = ActivityAccountBinding.inflate(getLayoutInflater());
+        sharedPrefHelper = new SharedPrefHelper(this);
         // Set content view bằng getRoot() của binding
         setContentView(binding.getRoot());
 
@@ -56,11 +59,13 @@ public class AccountActivity extends AppCompatActivity {
     private void loadUserData() {
         // (Đây là nơi bạn tải dữ liệu từ API/Database)
         // Dữ liệu giả định:
-        binding.etFullName.setText("Nguyễn Văn A");
-        binding.etEmail.setText("nguyenvana@example.com");
+        binding.etFullName.setText(sharedPrefHelper.getString("nameUser", ""));
 
-        binding.etAccountCreationDate.setText("20/05/2023"); // Ngày tạo tài khoản (Không thể sửa)
-        binding.etAge.setText("28"); // Tuổi
+
+        binding.etEmail.setText(sharedPrefHelper.getString("emailUser", ""));
+
+        binding.etAccountCreationDate.setText(sharedPrefHelper.getString("created_at", "")); // Ngày tạo tài khoản (Không thể sửa)
+        binding.etAge.setText(sharedPrefHelper.getString("ageUser", "")); // Tuổi
 
         // Dùng Glide hoặc Picasso để tải ảnh đại diện vào binding.ivAvatar
         // Ví dụ:
@@ -71,6 +76,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private void saveChanges() {
         String fullName = binding.etFullName.getText().toString().trim();
+        String age = binding.etAge.getText().toString().trim();
 
         if (fullName.isEmpty()) {
             binding.tilFullName.setError("Họ tên không được để trống");
@@ -79,9 +85,17 @@ public class AccountActivity extends AppCompatActivity {
             binding.tilFullName.setError(null);
         }
 
-        // ... Logic gọi API/Firebase để lưu thay đổi ...
+        // LƯU LẠI DỮ LIỆU ĐÃ THAY ĐỔI VÀO SharedPrefHelper
+
+        // Lưu Họ và Tên mới
+        sharedPrefHelper.saveString("nameUser", fullName); //
+
+        // Lưu Tuổi mới (nếu được chỉnh sửa)
+        sharedPrefHelper.saveString("ageUser", age); //
+
+        // ... Logic gọi API/Firebase để lưu thay đổi (nếu cần đồng bộ) ...
 
         Toast.makeText(this, "Lưu thay đổi thành công!", Toast.LENGTH_SHORT).show();
-        finish(); // Đóng Activity sau khi lưu
+
     }
 }

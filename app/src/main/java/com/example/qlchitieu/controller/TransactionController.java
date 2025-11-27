@@ -102,7 +102,18 @@ public class TransactionController extends BaseController<Transaction, Transacti
     public List<Transaction> getListByIdWallet(int idWallet){
         return dao.getListByIdWallet(idWallet);
     }
+    public long getTotalExpenseByMonth(String formattedDate) {
+        long totalExpense = 0;
+        // Lấy danh sách giao dịch theo tháng từ CSDL
+        List<Transaction> transactions = getListByMonth(formattedDate); // Giả sử hàm này đã tồn tại
 
+        for (Transaction t : transactions) {
+            if (t.getType().equals("expense")) { // Chỉ tính giao dịch chi tiêu (expense)
+                totalExpense += t.getAmount();
+            }
+        }
+        return totalExpense;
+    }
     public List<Transaction> getListByMonth(String date){
         return dao.getListByMonth(date);
     }

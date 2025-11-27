@@ -185,16 +185,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView() {
-        tvTotalIncome.setText(walletController.getCurrentWallet());
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // Use appropriate Locale
-        String formattedDate = sdf.format(currentCalendar.getTime());
-        int result = 0;
-        for (Transaction t : transactionController.getListByMonth(formattedDate)) {
-            if (t.getType() != "income") result -= (int) t.getAmount();
-        }
-        tvTotalExpense.setText(helper.formatCurrency(result));
+//        tvTotalIncome.setText(walletController.getCurrentWallet());
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()); // Use appropriate Locale
+//        String formattedDate = sdf.format(currentCalendar.getTime());
+//        int result = 0;
+//        for (Transaction t : transactionController.getListByMonth(formattedDate)) {
+//            if (t.getType() != "income") result -= (int) t.getAmount();
+//        }
+//        tvTotalExpense.setText(helper.formatCurrency(result));
     }
+
+
 
     private void setupMonthNavigation() {
         ivMonthPrev.setOnClickListener(v -> {
@@ -339,6 +341,65 @@ public class HomeFragment extends Fragment {
 //        // loadBarChartData(year, month);
 //    }
     private void updateDashboard() {
+//        // 1. Cập nhật TextView tháng
+//        Calendar today = Calendar.getInstance();
+//        if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+//                currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
+//            tvCurrentMonth.setText("Tháng này");
+//        } else {
+//            String monthText = monthFormatter.format(currentCalendar.getTime());
+//            // Viết hoa chữ cái đầu cho "Tháng..."
+//            monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
+//            tvCurrentMonth.setText(monthText);
+//        }
+//
+//        // 2. Lấy dữ liệu
+//        int year = currentCalendar.get(Calendar.YEAR);
+//        int month = currentCalendar.get(Calendar.MONTH);
+//
+//        // Dùng hàm dữ liệu giả để minh họa (giữ nguyên logic cũ)
+//        long[] currentMonthData = getFakeDataForMonth(year, month);
+//        long currentIncome = currentMonthData[0];
+//        long currentExpense = currentMonthData[1];
+//
+//        // Lấy dữ liệu tháng trước (giữ nguyên logic cũ)
+//        Calendar prevCalendar = (Calendar) currentCalendar.clone();
+//        prevCalendar.add(Calendar.MONTH, -1);
+//        long[] prevMonthData = getFakeDataForMonth(prevCalendar.get(Calendar.YEAR), prevCalendar.get(Calendar.MONTH));
+//        long prevExpense = prevMonthData[1];
+//
+//        // 3. Cập nhật TextView thu/chi (giữ nguyên logic cũ)
+//        tvTotalIncome.setText(currencyFormatter.format(currentIncome));
+//        tvTotalExpense.setText(currencyFormatter.format(currentExpense));
+//
+//        // 4. LOGIC CẬP NHẬT TVTHONGBAO (giữ nguyên logic cũ)
+//        long expenseDifference = currentExpense - prevExpense;
+//
+//        if (expenseDifference > 0) {
+//            String diffText = currencyFormatter.format(expenseDifference) + "đ";
+//            tvThongbao.setText(String.format("Tăng %s so với cùng kỳ tháng trước", diffText));
+//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_up, 0, 0, 0);
+//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
+//            tvThongbao.setTextColor(Color.rgb(185, 28, 28));
+//
+//        } else if (expenseDifference < 0) {
+//            long absoluteDifference = Math.abs(expenseDifference);
+//            String diffText = currencyFormatter.format(absoluteDifference) + "đ";
+//            tvThongbao.setText(String.format("Giảm %s so với cùng kỳ tháng trước", diffText));
+//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_down, 0, 0, 0);
+//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
+//            tvThongbao.setTextColor(Color.rgb(4, 120, 87));
+//
+//        } else {
+//            tvThongbao.setText("Chi tiêu tháng này bằng tháng trước");
+//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
+//            tvThongbao.setTextColor(Color.rgb(55, 65, 81));
+//        }
+//
+//        // 5. Tải lại biểu đồ BarChart với dữ liệu của tháng mới
+//        ArrayList<BarEntry> barEntries = getBarChartDataForMonth(year, month);
+//        loadBarChartData(barEntries);
         // 1. Cập nhật TextView tháng
         Calendar today = Calendar.getInstance();
         if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
@@ -351,28 +412,40 @@ public class HomeFragment extends Fragment {
             tvCurrentMonth.setText(monthText);
         }
 
-        // 2. Lấy dữ liệu
+        // 2. Lấy dữ liệu THỰC TẾ
         int year = currentCalendar.get(Calendar.YEAR);
         int month = currentCalendar.get(Calendar.MONTH);
 
-        // Dùng hàm dữ liệu giả để minh họa (giữ nguyên logic cũ)
-        long[] currentMonthData = getFakeDataForMonth(year, month);
-        long currentIncome = currentMonthData[0];
-        long currentExpense = currentMonthData[1];
+        // --- Bắt đầu phần thay thế logic lấy dữ liệu giả ---
 
-        // Lấy dữ liệu tháng trước (giữ nguyên logic cũ)
+        // Lấy ngày đầu tiên của tháng để truyền vào controller (hoặc format yyyy-MM-dd)
+        currentCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String formattedDate = sdf.format(currentCalendar.getTime());
+
+        // Lấy Tổng Thu/Chi Thực tế (Giả định WalletController có getWallet để lấy tổng hiện tại)
+        // Hiện tại ta chỉ lấy balance của ví, nên ta giữ nguyên getWallet() của WalletController
+        long currentIncome = 0; // Cần logic riêng để tính tổng thu nhập tháng này (nếu cần)
+        long currentExpense = transactionController.getTotalExpenseByMonth(formattedDate); // LẤY TỔNG CHI THỰC TẾ
+
+        // Dữ liệu tháng trước (dùng logic giả cũ để so sánh)
         Calendar prevCalendar = (Calendar) currentCalendar.clone();
         prevCalendar.add(Calendar.MONTH, -1);
         long[] prevMonthData = getFakeDataForMonth(prevCalendar.get(Calendar.YEAR), prevCalendar.get(Calendar.MONTH));
         long prevExpense = prevMonthData[1];
 
-        // 3. Cập nhật TextView thu/chi (giữ nguyên logic cũ)
-        tvTotalIncome.setText(currencyFormatter.format(currentIncome));
-        tvTotalExpense.setText(currencyFormatter.format(currentExpense));
+        // --- Kết thúc phần thay thế logic lấy dữ liệu giả ---
 
-        // 4. LOGIC CẬP NHẬT TVTHONGBAO (giữ nguyên logic cũ)
+        // 3. Cập nhật TextView thu/chi (Giữ nguyên)
+        // Lưu ý: Hiện tại tvTotalIncome đang hiển thị balance của ví (getCurrentWallet()), không phải thu nhập tháng.
+        // Cần sửa đổi WalletController hoặc gọi hàm tính tổng thu nhập của tháng tại đây.
+        tvTotalIncome.setText(walletController.getWallet()); // Lấy số dư ví (Giả định hàm getWallet() trả về số dư tổng)
+        tvTotalExpense.setText(currencyFormatter.format(currentExpense)); // Cập nhật tổng chi thực tế
+
+        // 4. LOGIC CẬP NHẬT TVTHONGBAO (Dùng currentExpense thực tế và prevExpense giả)
         long expenseDifference = currentExpense - prevExpense;
 
+        // ... (Giữ nguyên logic if/else cho tvThongbao) ...
         if (expenseDifference > 0) {
             String diffText = currencyFormatter.format(expenseDifference) + "đ";
             tvThongbao.setText(String.format("Tăng %s so với cùng kỳ tháng trước", diffText));
@@ -394,6 +467,7 @@ public class HomeFragment extends Fragment {
             tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
             tvThongbao.setTextColor(Color.rgb(55, 65, 81));
         }
+
 
         // 5. Tải lại biểu đồ BarChart với dữ liệu của tháng mới
         ArrayList<BarEntry> barEntries = getBarChartDataForMonth(year, month);
