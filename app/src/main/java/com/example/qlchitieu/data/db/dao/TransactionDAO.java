@@ -74,8 +74,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
-    public List<Transaction> getListByDate(String date){
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE SUBSTR(T.date, 1, 10) = ?", new String[]{date});
+    public List<Transaction> getListByDate(String date, int idWallet){
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE SUBSTR(T.date, 1, 10) = ? AND wallet_id = ?", new String[]{date,String.valueOf(idWallet)});
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
@@ -102,10 +102,16 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         return list;
     }
 
-    public List<Transaction> getListByMonth(String date){
+    public List<Transaction> getListByMonth(String date,boolean isGroup){
         String monthString = date.split("-")[1];
+        String yearString = date.split("-")[0];
+        String groupBy = isGroup ? "GROUP BY category_name":"";
 
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE strftime('%m', T.date) = ?", new String[]{monthString});
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name " +
+                "FROM `Transaction` T " +
+                "JOIN `Category` C ON T.category_id = C.id " +
+                "WHERE strftime('%Y-%m', SUBSTR(T.date,1,10)) = ? " +
+                groupBy, new String[]{yearString + "-" + monthString});
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
@@ -114,7 +120,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
             }while (cursor.moveToNext());
         }
 
-        cursor.close();
+//        cursor.close();
         return list;
     }
 }

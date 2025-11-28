@@ -1,6 +1,7 @@
 package com.example.qlchitieu.controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.data.db.dao.WalletDAO;
@@ -65,13 +66,13 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
         // Check user had create wallet
         if(dao.exist("user_id",String.valueOf(userId))){
             wallet = dao.getBy("user_id",String.valueOf(userId));
+            wallet.setBalance(balance);
             // Update
             int result = dao.update(wallet,"user_id = ?",new String[]{String.valueOf(userId)});
             if(result <= 0){
                 callback.onFailure("Lỗi khi cập nhật ví vào CSDL");
                 return;
             }
-            wallet.setId(result);
 
             fBase.updateDocument(uuid, wallet, new BaseFirebase.DataCallback<Void>() {
                 @Override

@@ -154,7 +154,7 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
 
         // Check valiadate
         if(!isTheFirstLoginGoogle()){
-            if(user.getPassword() != oldPassword){
+            if(!user.getPassword().equals(oldPassword)){
                 callback.onFailure("Mật khẩu cũ không đúng");
                 return;
             }
@@ -228,5 +228,9 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
                 .set(user)
                 .addOnSuccessListener(aVoid -> Log.d("FIREBASE", "User Google saved successfully"))
                 .addOnFailureListener(e -> Log.e("FIREBASE", "Failed to save Google user", e));
+    }
+
+    public void updateInformation(String name, int age, BaseFirebase.DataCallback<String> callback){
+//        User user = u
     }
 }

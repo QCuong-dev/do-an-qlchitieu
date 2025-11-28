@@ -1,6 +1,8 @@
 package com.example.qlchitieu.helpers;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Patterns;
 
 import com.example.qlchitieu.Activites.MainActivity;
@@ -88,5 +90,11 @@ public class Helpers {
     public String formatCurrency(long amount){
         NumberFormat nf = NumberFormat.getInstance(new Locale("vi","VN"));
         return nf.format(amount);
+    }
+
+    public boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 }

@@ -170,7 +170,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         allTransactions.clear();
 
         // Transaction day
-        for(com.example.qlchitieu.model.Transaction t : transactionController.getListByDate(date.toString())){
+        List<com.example.qlchitieu.model.Transaction> resultTransaction = transactionController.getListByDate(date.toString());
+        if(resultTransaction == null){
+            return;
+        }
+        for(com.example.qlchitieu.model.Transaction t : resultTransaction){
             // Caculator income and expense
             if(t.getType().equals("income")){
                 income += (int)t.getAmount();
@@ -193,7 +197,6 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         binding.tvIncome.setText(helper.formatCurrency(income) + " VND");
         binding.tvExpense.setText("-" + helper.formatCurrency(expense) + " VND");
         binding.tvTotal.setText(helper.formatCurrency(total) + " VND");
-
 
         transactionAdapter.filterList(filteredList);
     }

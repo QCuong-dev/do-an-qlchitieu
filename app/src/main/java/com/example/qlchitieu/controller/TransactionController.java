@@ -96,14 +96,23 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     public List<Transaction> getListByDate(String date){
-        return dao.getListByDate(date);
+        int idUser = sharedPrefHelper.getInt("idUser",0);
+        if(idUser == 0) return null;
+
+        if(walletController == null) walletController = new WalletController(context);
+        Wallet wallet = walletController.getWalletByUserId(idUser);
+        if(wallet == null){
+            return null;
+        }
+
+        return dao.getListByDate(date,wallet.getId());
     }
 
     public List<Transaction> getListByIdWallet(int idWallet){
         return dao.getListByIdWallet(idWallet);
     }
 
-    public List<Transaction> getListByMonth(String date){
-        return dao.getListByMonth(date);
+    public List<Transaction> getListByMonth(String date, boolean isGroup){
+        return dao.getListByMonth(date,isGroup);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.qlchitieu.model;
 
+import androidx.annotation.NonNull;
+
 public class Wallet {
     private int id,balance,user_id;
     private String uuid,wallet_name,currency;
@@ -61,5 +63,17 @@ public class Wallet {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Wallet: " +
+                "id=" + id +
+                ", balance=" + balance +
+                ", user_id=" + user_id +
+                ", uuid='" + uuid + '\'' +
+                ", wallet_name='" + wallet_name + '\'' +
+                ", currency='" + currency + '\'';
     }
 }
