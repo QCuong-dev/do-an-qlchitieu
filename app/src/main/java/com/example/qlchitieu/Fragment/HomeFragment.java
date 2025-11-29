@@ -176,16 +176,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         addClickEvents();
 
-        setupBarChart(new LabelFormatter());
+        setupBarChart();
 //        loadBarChartData();
 
         setupMonthNavigation();
 
+        updateDashboard();
+
         initView();
-//        updateDashboard();
-        updateBarChart();
     }
 
     private void initView() {
@@ -241,7 +242,7 @@ public class HomeFragment extends Fragment {
 
         LabelFormatter labelFormatter = new LabelFormatter();
         labelFormatter.labels = listCategoryName.toArray(new String[]{});
-        setupBarChart(labelFormatter);
+        setupBarChart();
 
         ArrayList<BarEntry> barEntries = getBarChartDataForMonth(formattedDate,transactionList);
         loadBarChartData(barEntries);
@@ -542,7 +543,7 @@ public class HomeFragment extends Fragment {
 
 
     // Phương thức tùy chỉnh biểu đồ
-    private void setupBarChart(LabelFormatter labelFormatter) {
+    private void setupBarChart() {
         // Bỏ mô tả (description label)
         barChart.setDescription(null);
         // Tắt trục Y bên phải
@@ -557,7 +558,7 @@ public class HomeFragment extends Fragment {
         xAxis.setDrawGridLines(false); // Tắt đường lưới trục X
 
         // Tùy chỉnh trục Y bên trái
-        xAxis.setValueFormatter(labelFormatter);
+        xAxis.setValueFormatter(new LabelFormatter());
         barChart.getAxisLeft().setDrawGridLines(true); // Bật đường lưới trục Y (mờ)
 
         // Bật và tùy chỉnh Chú thích (Legend)
