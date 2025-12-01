@@ -3,6 +3,7 @@ package com.example.qlchitieu.Activites;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -41,9 +42,8 @@ public class AddChitieuActivity extends AppCompatActivity {
     private CategoryController categoryController;
     private TransactionController transactionController;
 
-    // --- PHẦN THÊM MỚI ĐỂ XỬ LÝ KẾT QUẢ TỪ CAMERA/GALLERY ---
-
-    // Launcher cho việc chọn ảnh từ thư viện
+//     --- PHẦN THÊM MỚI ĐỂ XỬ LÝ KẾT QUẢ TỪ CAMERA/GALLERY ---
+//     Launcher cho việc chọn ảnh từ thư viện
     private final ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
@@ -55,7 +55,32 @@ public class AddChitieuActivity extends AppCompatActivity {
                     Log.d("PhotoPicker", "No media selected");
                 }
             });
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // Quyền đã được cấp, tiến hành mở Camera
+                    openCameraInternal();
+                } else {
+                    // Quyền bị từ chối
+                    Toast.makeText(this, "Cần quyền Camera để chụp ảnh.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
+    private void openCamera() {
+        // 1. Kiểm tra xem quyền đã được cấp chưa
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Quyền đã được cấp, mở Camera ngay lập tức
+            openCameraInternal();
+        } else {
+            // Quyền chưa được cấp, yêu cầu quyền từ người dùng
+            requestPermissionLauncher.launch(android.Manifest.permission.CAMERA);
+        }
+    }
+    private void openCameraInternal() {
+        // Không cần kiểm tra quyền nữa, chỉ cần chạy launcher
+        takePicturePreviewLauncher.launch(null);
+    }
     // Launcher cho việc chụp ảnh (chỉ lấy ảnh thumbnail, đơn giản)
     private final ActivityResultLauncher<Void> takePicturePreviewLauncher =
             registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), bitmap -> {
@@ -266,17 +291,6 @@ public class AddChitieuActivity extends AppCompatActivity {
                 .build());
     }
 
-    /**
-     * Mở camera để chụp ảnh (sử dụng TakePicturePreview)
-     * Cần cấp quyền <uses-permission android:name="android.permission.CAMERA" />
-     * trong file AndroidManifest.xml
-     */
-    private void openCamera() {
-        // TODO: Cần kiểm tra quyền CAMERA trước khi gọi
-        takePicturePreviewLauncher.launch(null);
-    }
-
-    // --- CÁC PHƯƠNG THỨC HỖ TRỢ CHO DATE, TIME, NOTE (từ lần trước) ---
 
     private void setupDefaultDateTime() {
         Calendar calendar = Calendar.getInstance();
