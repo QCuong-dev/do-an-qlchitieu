@@ -133,13 +133,45 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
         return dao.getUserByEmail(email);
     }
 
+    public void saveInformationUser(String name, String age, BaseFirebase.DataCallback<String> callback){
+        User user;
+        int userId = sharedPrefHelper.getInt("idUser",0);
+        // Check user exits
+        if(!dao.exist("id",String.valueOf(userId))){
+            callback.onFailure("Không tìm thấy User");
+            return;
+        }
+        user = dao.getById(userId);
+
+        // Handle update
+        user.setName(name);
+        user.setAge(age);
+        dao.update(user,"id = ?",new String[]{String.valueOf(userId)});
+
+        // Handle save firebase
+        fBase.updateDocument(user.getUuid(), user, new BaseFirebase.DataCallback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                saveSharedPrefUser(user);
+                callback.onSuccess("Cập nhật thông tin thành công");
+            }
+
+            @Override
+            public void onFailure(String message) {
+                callback.onFailure("Lỗi khi thực hiện lưu Firebase");
+            }
+        });
+    }
+
     public void saveSharedPrefUser(User user){
         sharedPrefHelper.saveString("nameUser",user.getName());
         sharedPrefHelper.saveString("emailUser", user.getEmail());
         sharedPrefHelper.saveInt("idUser",user.getId());
+        sharedPrefHelper.saveString("createdAt",helper.convertDate(user.getCreatedAt()));
+        sharedPrefHelper.saveString("ageUser",user.getAge());
         sharedPrefHelper.saveBoolean("isLogin",true);
 
-        Log.d("SHARED_PREF", "User saved to SharedPreferences: " + user.getName() + " - " + user.getEmail());
+        Log.d("SHARED_PREF", "User saved to SharedPreferences: " + user.getName() + " - " + user.getEmail() + " - " + user.getCreatedAt());
     }
 
     public void handleChangePassword(String oldPassword,String newPassword, String confirmNewPassword, BaseFirebase.DataCallback<String> callback){

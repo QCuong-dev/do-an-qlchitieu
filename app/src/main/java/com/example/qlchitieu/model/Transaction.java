@@ -4,6 +4,7 @@ public class Transaction {
     private int id,wallet_id,category_id;
     private String uuid,note,date,type,created_at;
     private float amount;
+    private int is_synced;
 
     // JOIN TABLE Category
     private String category_name;
@@ -98,5 +99,13 @@ public class Transaction {
 
     public void setCategory_name(String category_name) {
         this.category_name = category_name;
+    }
+
+    public int getIs_synced() {
+        return is_synced;
+    }
+
+    public void setIs_synced(int is_synced) {
+        this.is_synced = is_synced;
     }
 }

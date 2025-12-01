@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 public class Wallet {
     private int id,balance,user_id;
     private String uuid,wallet_name,currency;
+    private int is_synced;
 
     public Wallet() {
     }
@@ -63,6 +64,14 @@ public class Wallet {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public int getIs_synced() {
+        return is_synced;
+    }
+
+    public void setIs_synced(int is_synced) {
+        this.is_synced = is_synced;
     }
 
     @NonNull

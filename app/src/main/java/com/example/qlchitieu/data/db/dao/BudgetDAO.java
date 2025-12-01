@@ -26,6 +26,7 @@ public class BudgetDAO extends BaseDAO<Budget> {
         values.put("amount_limit",budget.getAmount_limit());
         values.put("start_date",budget.getStart_date());
         values.put("end_date",budget.getEnd_date());
+        values.put("is_synced",budget.getIs_synced());
         return values;
     }
 
@@ -39,6 +40,7 @@ public class BudgetDAO extends BaseDAO<Budget> {
         budget.setAmount_limit(cursor.getInt(cursor.getColumnIndexOrThrow("amount_limit")));
         budget.setStart_date(cursor.getString(cursor.getColumnIndexOrThrow("start_date")));
         budget.setEnd_date(cursor.getString(cursor.getColumnIndexOrThrow("end_date")));
+        budget.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return budget;
     }
 }

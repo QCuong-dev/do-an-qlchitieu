@@ -43,6 +43,7 @@ public class UserDAO extends BaseDAO<User> {
         values.put("username",user.getUsername());
         values.put("password",user.getPassword());
         values.put("created_at",getCurrentDate());
+        values.put("is_synced",user.getIs_synced());
         return values;
     }
 
@@ -57,6 +58,7 @@ public class UserDAO extends BaseDAO<User> {
         user.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
         user.setPassword(cursor.getString(cursor.getColumnIndexOrThrow("password")));
         user.setCreatedAt(cursor.getString(cursor.getColumnIndexOrThrow("created_at")));
+        user.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return user;
     }
 

@@ -24,6 +24,7 @@ public class CategoryDAO extends BaseDAO<Category> {
         values.put("uuid",category.getUuid());
         values.put("name",category.getName());
         values.put("user_id",category.getUser_id());
+        values.put("is_synced",category.getIs_synced());
         return values;
     }
 
@@ -34,6 +35,7 @@ public class CategoryDAO extends BaseDAO<Category> {
         category.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
         category.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
         category.setUser_id(cursor.getInt(cursor.getColumnIndexOrThrow("user_id")));
+        category.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return category;
     }
 

@@ -3,6 +3,7 @@ package com.example.qlchitieu.model;
 public class Budget {
     private int id, user_id,category_id,amount_limit;
     private String uuid,start_date,end_date;
+    private int is_synced;
 
     public Budget() {
     }
@@ -70,5 +71,13 @@ public class Budget {
 
     public void setEnd_date(String end_date) {
         this.end_date = end_date;
+    }
+
+    public int getIs_synced() {
+        return is_synced;
+    }
+
+    public void setIs_synced(int is_synced) {
+        this.is_synced = is_synced;
     }
 }

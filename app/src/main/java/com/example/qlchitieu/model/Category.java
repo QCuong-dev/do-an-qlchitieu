@@ -6,6 +6,7 @@ public class Category {
     private int user_id;
     private String name;
     private int icon;
+    private int is_synced;
 
     public Category() {
     }
@@ -45,5 +46,13 @@ public class Category {
 
     public int getId() {
         return id;
+    }
+
+    public int getIs_synced() {
+        return is_synced;
+    }
+
+    public void setIs_synced(int is_synced) {
+        this.is_synced = is_synced;
     }
 }

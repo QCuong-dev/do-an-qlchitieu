@@ -72,6 +72,14 @@ public class Helpers {
         return outputFormatter.format(inputLocalDate);
     }
 
+    public String convertDate(String inputDate){
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd",Locale.getDefault());
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy",Locale.getDefault());
+
+        LocalDate inputLocalDate = LocalDate.parse(inputDate,inputFormatter);
+        return outputFormatter.format(inputLocalDate);
+    }
+
     public boolean handleIsLogin(){
         boolean isLogin = sharedPrefHelper.getBoolean("isLogin",false);
 

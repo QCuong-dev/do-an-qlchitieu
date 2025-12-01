@@ -9,6 +9,7 @@ public class User {
     private String username;
     private String password;
     private String createdAt;
+    private int is_synced;
 
     public User(){}
     public User(String uuid, String name, String age, String email, String username, String password) {
@@ -84,4 +85,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public int getIs_synced() {
+        return is_synced;
+    }
+
+    public void setIs_synced(int is_synced) {
+        this.is_synced = is_synced;
+    }
 }

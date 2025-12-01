@@ -37,6 +37,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         values.put("date",transaction.getDate());
         values.put("type", transaction.getType());
         values.put("created_at",getCurrentDate());
+        values.put("is_synced",transaction.getIs_synced());
         return values;
     }
 
@@ -52,6 +53,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         transaction.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
         transaction.setType(cursor.getString(cursor.getColumnIndexOrThrow("type")));
         transaction.setCreated_at(cursor.getString(cursor.getColumnIndexOrThrow("created_at")));
+        transaction.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return transaction;
     }
 
@@ -75,7 +77,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
     }
 
     public List<Transaction> getListByDate(String date, int idWallet){
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE SUBSTR(T.date, 1, 10) = ? AND wallet_id = ?", new String[]{date,String.valueOf(idWallet)});
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.is_synced, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE SUBSTR(T.date, 1, 10) = ? AND wallet_id = ?", new String[]{date,String.valueOf(idWallet)});
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){

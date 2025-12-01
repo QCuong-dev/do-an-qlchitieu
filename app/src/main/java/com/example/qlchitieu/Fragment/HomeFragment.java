@@ -176,7 +176,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         addClickEvents();
 
         setupBarChart();

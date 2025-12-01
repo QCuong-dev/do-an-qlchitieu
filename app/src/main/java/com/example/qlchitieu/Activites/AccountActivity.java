@@ -57,21 +57,10 @@ public class AccountActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        // (Đây là nơi bạn tải dữ liệu từ API/Database)
-        // Dữ liệu giả định:
         binding.etFullName.setText(sharedPrefHelper.getString("nameUser", ""));
-
-
         binding.etEmail.setText(sharedPrefHelper.getString("emailUser", ""));
-
-        binding.etAccountCreationDate.setText(sharedPrefHelper.getString("created_at", "")); // Ngày tạo tài khoản (Không thể sửa)
+        binding.etAccountCreationDate.setText(sharedPrefHelper.getString("createdAt", "")); // Ngày tạo tài khoản (Không thể sửa)
         binding.etAge.setText(sharedPrefHelper.getString("ageUser", "")); // Tuổi
-
-        // Dùng Glide hoặc Picasso để tải ảnh đại diện vào binding.ivAvatar
-        // Ví dụ:
-        // Glide.with(this)
-        //     .load(user.getAvatarUrl())
-        //     .into(binding.ivAvatar);
     }
 
     private void saveChanges() {
@@ -93,9 +82,6 @@ public class AccountActivity extends AppCompatActivity {
         // Lưu Tuổi mới (nếu được chỉnh sửa)
         sharedPrefHelper.saveString("ageUser", age); //
 
-        // ... Logic gọi API/Firebase để lưu thay đổi (nếu cần đồng bộ) ...
-
         Toast.makeText(this, "Lưu thay đổi thành công!", Toast.LENGTH_SHORT).show();
-
     }
 }
