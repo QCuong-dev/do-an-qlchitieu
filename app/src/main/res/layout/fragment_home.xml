@@ -149,7 +149,7 @@
                             android:layout_marginTop="4dp"
                             android:gravity="center"
                             android:text="Thêm chi tiêu\ntháng này"
-                            android:textSize="15sp" />
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <!-- Nút 3: Giao dịch định kỳ -->
@@ -171,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:text="Chi tiêu \nchi tiết"
                             android:gravity="center"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
                     <LinearLayout
@@ -192,7 +192,7 @@
                             android:layout_height="wrap_content"
                             android:text="Hỏi Chatbox"
                             android:gravity="center"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
 
@@ -216,7 +216,7 @@
                             android:layout_height="wrap_content"
                             android:text="Tiện ích\nkhác"
                             android:gravity="center"
-                            android:textSize="15sp"
+                            android:textSize="13sp"
                             android:layout_marginTop="4dp"/>
                     </LinearLayout>
                 </LinearLayout>
