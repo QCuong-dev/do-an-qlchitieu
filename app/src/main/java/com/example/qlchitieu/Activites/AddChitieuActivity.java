@@ -69,7 +69,6 @@ public class AddChitieuActivity extends AppCompatActivity {
                 }
             });
 
-    // -----------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +86,12 @@ public class AddChitieuActivity extends AppCompatActivity {
         setupClickListeners();
 
         // Render categories
+//        loadCategories();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadCategories();
     }
 
@@ -177,6 +182,10 @@ public class AddChitieuActivity extends AppCompatActivity {
     }
 
     private void loadCategories() {
+
+        binding.chipGroupCategories.removeAllViews();
+        Chip chipThemMoi = binding.chipThemMoi;
+
         List<Category> list = categoryController.getAll();
         String firstCategoryId = null; // Biến lưu ID của Chip đầu tiên
 
@@ -189,6 +198,8 @@ public class AddChitieuActivity extends AppCompatActivity {
 
             addCategoryToLayout(category);
         }
+
+        binding.chipGroupCategories.addView(chipThemMoi);
 
         if (firstCategoryId != null) {
 

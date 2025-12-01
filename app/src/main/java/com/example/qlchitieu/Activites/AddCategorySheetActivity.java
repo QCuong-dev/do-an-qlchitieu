@@ -31,16 +31,27 @@ public class AddCategorySheetActivity extends AppCompatActivity {
     private AddCategorySheetBinding binding;
     private CategoryController categoryController;
 
+    private int selectedIconId = 0;
+    private final int[] iconDrawables = {
+            R.drawable.ic_market,
+            R.drawable.ic_cinema,
+            R.drawable.ic_fuel,
+            R.drawable.ic_heal,
+            R.drawable.ic_home,
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = AddCategorySheetBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
-        setContentView(R.layout.add_category_sheet);
+//        setContentView(R.layout.add_category_sheet);
         setContentView(binding.getRoot());
         categoryController = new CategoryController(this);
 
         renderCategory();
+        renderIconSelection();
+
         binding.btnSave.setOnClickListener(this::saveCategory);
         binding.ivBack.setOnClickListener(this::backToAddChitieu);
 
@@ -58,6 +69,51 @@ public class AddCategorySheetActivity extends AppCompatActivity {
             addCategoryToLayout(c);
         }
     }
+
+    private void renderIconSelection() {
+        LinearLayout llIconSelection = binding.llIconSelection;
+        llIconSelection.removeAllViews(); // Đảm bảo làm sạch layout
+
+        // Định nghĩa kích thước và margin (cần được định nghĩa trong dimens.xml)
+        int iconSize = (int) getResources().getDimension(R.dimen.icon_size);
+        int iconMargin = (int) getResources().getDimension(R.dimen.icon_margin);
+        int iconPadding = 10; // Đặt padding cố định
+
+        for (int iconId : iconDrawables) {
+            ImageView imageView = new ImageView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(iconSize, iconSize);
+            params.setMarginEnd(iconMargin);
+
+            imageView.setLayoutParams(params);
+            imageView.setImageResource(iconId);
+
+            // Thiết lập background selector (cần được định nghĩa trong drawable)
+            imageView.setBackgroundResource(R.drawable.icon_background_selector);
+            imageView.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
+
+            // Xử lý sự kiện click
+            imageView.setOnClickListener(v -> {
+                // Đặt lại trạng thái không được chọn cho tất cả các icon
+                for (int i = 0; i < llIconSelection.getChildCount(); i++) {
+                    View child = llIconSelection.getChildAt(i);
+                    child.setSelected(false);
+                }
+
+                // Đánh dấu icon hiện tại là được chọn
+                v.setSelected(true);
+                selectedIconId = iconId;
+            });
+
+            llIconSelection.addView(imageView);
+        }
+
+        // Thiết lập icon đầu tiên là mặc định được chọn
+        if (llIconSelection.getChildCount() > 0) {
+            llIconSelection.getChildAt(0).setSelected(true);
+            selectedIconId = iconDrawables[0];
+        }
+    }
+
     private void addCategoryToLayout(Category category) {
 
         // Lấy layout chứa danh sách

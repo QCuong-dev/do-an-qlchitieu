@@ -184,6 +184,8 @@ public class HomeFragment extends Fragment {
 
         setupMonthNavigation();
 
+        updateBarChart();
+
         updateDashboard();
 
         initView();
@@ -379,114 +381,6 @@ public class HomeFragment extends Fragment {
 
         return entries;
     }
-
-    // === HÀM MỚI: CẬP NHẬT GIAO DIỆN KHI ĐỔI THÁNG ===
-//    private void updateDashboard() {
-
-    /// /        // 1. Cập nhật TextView tháng
-    /// /        Calendar today = Calendar.getInstance();
-    /// /        if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-    /// /                currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
-    /// /            tvCurrentMonth.setText("Tháng này");
-    /// /        } else {
-    /// /            String monthText = monthFormatter.format(currentCalendar.getTime());
-    /// /            // Viết hoa chữ cái đầu cho "Tháng..."
-    /// /            monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
-    /// /            tvCurrentMonth.setText(monthText);
-    /// /        }
-    /// /
-    /// /        // 2. Lấy dữ liệu (THAY THẾ BẰNG LOGIC CỦA BẠN)
-    /// /        int year = currentCalendar.get(Calendar.YEAR);
-    /// /        int month = currentCalendar.get(Calendar.MONTH); // Lưu ý: Tháng 0-indexed (0=Tháng 1)
-    /// /
-    /// /        // Dùng hàm dữ liệu giả để minh họa
-    /// /        long[] data = getFakeDataForMonth(year, month);
-    /// /        long income = data[0];
-    /// /        long expense = data[1];
-    /// /
-    /// /        // 3. Cập nhật TextView thu/chi
-    /// /        tvTotalIncome.setText(currencyFormatter.format(income));
-    /// /        tvTotalExpense.setText(currencyFormatter.format(expense));
-    /// /
-    /// /        // 4. (Tùy chọn) Tải lại biểu đồ BarChart với dữ liệu của tháng mới
-    /// /        // loadBarChartData(year, month);
-//        // 1. Cập nhật TextView tháng (Giữ nguyên)
-//        Calendar today = Calendar.getInstance();
-//        if (currentCalendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-//                currentCalendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)) {
-//            tvCurrentMonth.setText("Tháng này");
-//        } else {
-//            String monthText = monthFormatter.format(currentCalendar.getTime());
-//            // Viết hoa chữ cái đầu cho "Tháng..."
-//            monthText = monthText.substring(0, 1).toUpperCase() + monthText.substring(1);
-//            tvCurrentMonth.setText(monthText);
-//        }
-//
-//        // 2. Lấy dữ liệu
-//        int year = currentCalendar.get(Calendar.YEAR);
-//        int month = currentCalendar.get(Calendar.MONTH);
-//
-//        // Dùng hàm dữ liệu giả để minh họa
-//        long[] currentMonthData = getFakeDataForMonth(year, month);
-//        long currentIncome = currentMonthData[0];
-//        long currentExpense = currentMonthData[1];
-//
-//        // Lấy dữ liệu tháng trước
-//        Calendar prevCalendar = (Calendar) currentCalendar.clone();
-//        prevCalendar.add(Calendar.MONTH, -1);
-//        long[] prevMonthData = getFakeDataForMonth(prevCalendar.get(Calendar.YEAR), prevCalendar.get(Calendar.MONTH));
-//        long prevExpense = prevMonthData[1]; // Chỉ so sánh chi tiêu để minh họa
-//
-//        // 3. Cập nhật TextView thu/chi (Giữ nguyên)
-//        tvTotalIncome.setText(currencyFormatter.format(currentIncome));
-//        tvTotalExpense.setText(currencyFormatter.format(currentExpense));
-//
-//        // 4. LOGIC CẬP NHẬT TVTHONGBAO
-//        long expenseDifference = currentExpense - prevExpense; // Lượng thay đổi chi tiêu so với tháng trước
-//
-//        if (expenseDifference > 0) {
-//            // Chi tiêu Tăng
-//            String diffText = currencyFormatter.format(expenseDifference) + "đ";
-//            tvThongbao.setText(String.format("Tăng %s so với cùng kỳ tháng trước", diffText));
-//
-//            // Thiết lập Drawable (Icon) bên trái: ic_trending_up
-//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_up, 0, 0, 0);
-//
-//            // Cập nhật màu background (tùy chọn)
-//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg); // Giả sử bạn có bg màu đỏ nhạt
-//            // Cập nhật màu chữ (tùy chọn)
-//            tvThongbao.setTextColor(Color.rgb(185, 28, 28)); // Màu đỏ đậm
-//
-//        } else if (expenseDifference < 0) {
-//            // Chi tiêu Giảm
-//            long absoluteDifference = Math.abs(expenseDifference);
-//            String diffText = currencyFormatter.format(absoluteDifference) + "đ";
-//            tvThongbao.setText(String.format("Giảm %s so với cùng kỳ tháng trước", diffText));
-//
-//            // Thiết lập Drawable (Icon) bên trái: ic_trending_down
-//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_trending_down, 0, 0, 0);
-//
-//            // Cập nhật màu background (tùy chọn)
-//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg); // Giả sử bạn có bg màu xanh lá nhạt
-//            // Cập nhật màu chữ (tùy chọn)
-//            tvThongbao.setTextColor(Color.rgb(4, 120, 87)); // Màu xanh lá đậm
-//
-//        } else {
-//            // Chi tiêu Không đổi
-//            tvThongbao.setText("Chi tiêu tháng này bằng tháng trước");
-//
-//            // Sử dụng một icon trung tính hoặc ẩn
-//            tvThongbao.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//
-//            // Thiết lập màu trung tính (ví dụ: nền xám nhạt)
-//            tvThongbao.setBackgroundResource(R.drawable.rounded_gray_bg);
-//            tvThongbao.setTextColor(Color.rgb(55, 65, 81)); // Màu chữ xám/đen
-//        }
-//
-//        // 5. (Tùy chọn) Tải lại biểu đồ BarChart với dữ liệu của tháng mới
-//        // loadBarChartData(year, month);
-//    }
-
     private void addClickEvents() {
 
 
@@ -592,34 +486,4 @@ public class HomeFragment extends Fragment {
         // 3.5. Yêu cầu biểu đồ vẽ lại
         barChart.invalidate();
     }
-
-//    // Phương thức tạo và nạp dữ liệu mẫu
-//    private void loadBarChartData() {
-//        // 3.1. Tạo một danh sách các điểm dữ liệu (BarEntry)
-//        ArrayList<BarEntry> entries = new ArrayList<>();
-//        entries.add(new BarEntry(0, 40000)); // (x=0, y=40000)
-//        entries.add(new BarEntry(1, 80000)); // (x=1, y=80000)
-//        entries.add(new BarEntry(2, 60000)); // (x=2, y=60000)
-//        entries.add(new BarEntry(3, 20000)); // (x=3, y=20000)
-//        entries.add(new BarEntry(4, 70000)); // (x=4, y=70000)
-//
-//        // 3.2. Tạo một BarDataSet từ danh sách entries
-//        BarDataSet dataSet = new BarDataSet(entries, "Chi tiêu"); // Label cho bộ dữ liệu này
-//
-//        // Tùy chỉnh màu sắc cho cột (dùng màu xanh dương đơn giản)
-//        dataSet.setColor(Color.rgb(102, 178, 255));
-//        dataSet.setValueTextSize(10f); // Kích thước chữ của giá trị
-//        dataSet.setValueTextColor(Color.BLACK); // Màu chữ của giá trị
-//
-//        // 3.3. Tạo BarData để chứa tất cả các BarDataSet
-//        BarData barData = new BarData(dataSet);
-//        barData.setBarWidth(0.9f); // Đặt độ rộng của cột (0.9f là 90% không gian)
-//
-//        // 3.4. Nạp BarData vào BarChart
-//        barChart.setData(barData);
-//        barChart.setFitBars(true); // Căn chỉnh các cột vào giữa
-//
-//        // 3.5. Yêu cầu biểu đồ vẽ lại
-//        barChart.invalidate();
-//    }
 }
