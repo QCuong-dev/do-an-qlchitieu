@@ -36,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String data) {
                 Toast.makeText(SignupActivity.this, data, Toast.LENGTH_SHORT).show();
+                finish();
 
             }
             @Override
