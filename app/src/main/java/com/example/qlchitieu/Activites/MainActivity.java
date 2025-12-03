@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.qlchitieu.Fragment.ChatboxFragment;
 import com.example.qlchitieu.Fragment.SettingFragment;
@@ -19,6 +20,13 @@ import kotlin.jvm.functions.Function1;
 public class MainActivity extends AppCompatActivity {
 
     NafisBottomNavigation bottomNavigation;
+
+    private HomeFragment homeFragment;
+    private CalendarFragment calendarFragment;
+    private ChatboxFragment chatboxFragment;
+    private SettingFragment settingFragment;
+    private Fragment activeFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
 //            return insets;
 //        });
+
+        homeFragment = new HomeFragment();
+        calendarFragment = new CalendarFragment();
+        chatboxFragment = new ChatboxFragment();
+        settingFragment = new SettingFragment();
+
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.container, settingFragment, "4").hide(settingFragment) // Ẩn ngay lập tức
+                .add(R.id.container, chatboxFragment, "3").hide(chatboxFragment) // Ẩn ngay lập tức
+                .add(R.id.container, calendarFragment, "2").hide(calendarFragment) // Ẩn ngay lập tức
+                .add(R.id.container, homeFragment, "1") // Mặc định show Home
+                .commit();
+        activeFragment = homeFragment;
+
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
         bottomNavigation.add(new NafisBottomNavigation.Model(1, R.drawable.ic_home));
@@ -41,20 +64,19 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigation.setOnShowListener(new Function1<NafisBottomNavigation.Model, Unit>() {
             @Override
             public Unit invoke(NafisBottomNavigation.Model model) {
-                Fragment fragment =null;
+                Fragment nextFragment = null;
                 if (model.getId() == 1) {
-                    fragment = new HomeFragment();
-
+                    nextFragment = homeFragment;
                 } else if (model.getId() == 2) {
-                    fragment =new CalendarFragment();
+                    nextFragment = calendarFragment;
                 } else if (model.getId() == 3) {
-                    fragment = new ChatboxFragment();
+                    nextFragment = chatboxFragment;
                 } else if (model.getId() == 4) {
-                    fragment = new SettingFragment();
+                    nextFragment = settingFragment;
                 }
 
-                if (fragment != null) {
-                    LoadAndReplaceFragment(fragment);
+                if (nextFragment != null && nextFragment != activeFragment) {
+                    loadAndShowFragment(nextFragment); // Gọi hàm mới
                 }
 
                 return null;
@@ -77,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void LoadAndReplaceFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
+    private void loadAndShowFragment(Fragment nextFragment) {
+        getSupportFragmentManager().beginTransaction()
+                .hide(activeFragment) // Ẩn Fragment hiện tại
+                .show(nextFragment) // Hiển thị Fragment mới
                 .commit();
+        activeFragment = nextFragment; // Cập nhật Fragment đang hoạt động
     }
 
 }

@@ -50,6 +50,7 @@ public class ChatboxFragment extends Fragment {
     private List<Message> messageList;
     private MessageAdapter messageAdapter;
     private GenerativeModelFutures generativeModel;
+    private com.google.ai.client.generativeai.java.ChatFutures chatModel;
 
 
     public ChatboxFragment() {
@@ -106,6 +107,7 @@ public class ChatboxFragment extends Fragment {
                 BuildConfig.GEMINI_API_KEY
         );
         generativeModel = GenerativeModelFutures.from(gm);
+        chatModel = generativeModel.startChat();
 
         // 3. Xử lý nút Gửi
         binding.buttonSend.setOnClickListener(v -> {
@@ -131,7 +133,8 @@ public class ChatboxFragment extends Fragment {
         Content content = new Content.Builder().addText(prompt).build();
 
         // Gọi API bất đồng bộ
-        ListenableFuture<GenerateContentResponse> future = generativeModel.generateContent(content);
+//        ListenableFuture<GenerateContentResponse> future = generativeModel.generateContent(content);
+        ListenableFuture<GenerateContentResponse> future = chatModel.sendMessage(content);
         Futures.addCallback(future, new FutureCallback<GenerateContentResponse>() {
             @Override
             public void onSuccess(GenerateContentResponse result) {
