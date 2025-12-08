@@ -23,15 +23,15 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
     }
 
     public String getWallet(){
-        int userId = sharedPrefHelper.getInt("idUser",0);
-        if(userId == 0) return "0";
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        if(uuidUser.isEmpty()) return "0";
 
-        Wallet wallet = dao.getBy("user_id",String.valueOf(userId));
+        Wallet wallet = dao.getBy("user_uid",uuidUser);
         if(wallet == null) return "0";
 
         // Get balance from transaction
         int result = 0;
-        for(Transaction t : transactionController.getListByIdWallet(wallet.getId())){
+        for(Transaction t : transactionController.getListByIdWallet(wallet.getUuid())){
             if(t.getType().equals("income")){
                 result += (int)t.getAmount();
             }else{
@@ -43,10 +43,10 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
     }
 
     public String getCurrentWallet(){
-        int userId = sharedPrefHelper.getInt("idUser",0);
-        if(userId == 0) return "0";
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        if(uuidUser.isEmpty()) return "0";
 
-        Wallet wallet = dao.getBy("user_id",String.valueOf(userId));
+        Wallet wallet = dao.getBy("user_uid",uuidUser);
         if(wallet == null) return "0";
 
         return helper.formatCurrency((wallet.getBalance()));
@@ -55,20 +55,20 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
     public void saveWallet(int balance, String currency, BaseFirebase.DataCallback<String> callback){
         Wallet wallet = new Wallet();
         String uuid = UUID.randomUUID().toString();
-        int userId = sharedPrefHelper.getInt("idUser",0);
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
 
         // Handle valiadate
-        if(userId == 0){
+        if(uuidUser.isEmpty()){
             callback.onFailure("Không tìm thấy User đăng nhập");
             return;
         }
 
         // Check user had create wallet
-        if(dao.exist("user_id",String.valueOf(userId))){
-            wallet = dao.getBy("user_id",String.valueOf(userId));
+        if(dao.exist("user_uid",uuidUser)){
+            wallet = dao.getBy("user_uid",uuidUser);
             wallet.setBalance(balance);
             // Update
-            int result = dao.update(wallet,"user_id = ?",new String[]{String.valueOf(userId)});
+            int result = dao.update(wallet,"user_uid = ?",new String[]{uuidUser});
             if(result <= 0){
                 callback.onFailure("Lỗi khi cập nhật ví vào CSDL");
                 return;
@@ -88,7 +88,7 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
 
         }else{
             wallet.setUuid(uuid);
-            wallet.setUser_id(userId);
+            wallet.setUser_uid(uuidUser);
             wallet.setWallet_name("Normal Wallet");
             wallet.setBalance(balance);
             wallet.setCurrency(currency);
@@ -114,7 +114,7 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
         }
     }
 
-    public Wallet getWalletByUserId(int idUser){
-        return dao.getWalletByUserId(idUser);
+    public Wallet getWalletByUserId(String uidUser){
+        return dao.getWalletByUserId(uidUser);
     }
 }

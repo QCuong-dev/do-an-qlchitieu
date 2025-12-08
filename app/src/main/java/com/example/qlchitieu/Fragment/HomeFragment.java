@@ -167,7 +167,6 @@ public class HomeFragment extends Fragment {
         monthFormatter = new SimpleDateFormat("MMMM yyyy", localeVN); // Ví dụ: "Tháng Mười Một 2025"
         currencyFormatter = NumberFormat.getInstance(localeVN);
 
-
         btnThemGD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

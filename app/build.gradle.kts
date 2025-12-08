@@ -33,7 +33,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String","GOOGLE_CLIENT_ID","\"${properties.getProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
+//        buildConfigField("String","GOOGLE_CLIENT_ID","\"${properties.getProperty("GOOGLE_CLIENT_ID") ?: ""}\"")
 
         // Lấy key từ local.properties và gán vào BuildConfig
         buildConfigField("String", "GEMINI_API_KEY", "\"${properties.getProperty("GEMINI_API_KEY") ?: ""}\"")

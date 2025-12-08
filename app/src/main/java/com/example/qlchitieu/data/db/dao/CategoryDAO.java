@@ -23,7 +23,7 @@ public class CategoryDAO extends BaseDAO<Category> {
         ContentValues values = new ContentValues();
         values.put("uuid",category.getUuid());
         values.put("name",category.getName());
-        values.put("user_id",category.getUser_id());
+        values.put("user_uid",category.getUser_uid());
         values.put("is_synced",category.getIs_synced());
         return values;
     }
@@ -34,15 +34,15 @@ public class CategoryDAO extends BaseDAO<Category> {
         category.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
         category.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
         category.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-        category.setUser_id(cursor.getInt(cursor.getColumnIndexOrThrow("user_id")));
+        category.setUser_uid(cursor.getString(cursor.getColumnIndexOrThrow("user_uid")));
         category.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return category;
     }
 
     // Check category exist
-    public boolean exist(int idUser, String column,String value){
-        String selection = column + " = ? AND user_id = ?";
-        String[] selectionArgs = { value,String.valueOf(idUser) };
+    public boolean exist(String uidUser, String column,String value){
+        String selection = column + " = ? AND user_uid = ?";
+        String[] selectionArgs = { value,String.valueOf(uidUser) };
 
         Cursor cursor = db.query(getTableName(),null,selection,selectionArgs,null,null,null);
         if(cursor.moveToFirst()){

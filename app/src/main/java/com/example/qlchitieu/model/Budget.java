@@ -1,16 +1,16 @@
 package com.example.qlchitieu.model;
 
 public class Budget {
-    private int id, user_id,category_id,amount_limit;
-    private String uuid,start_date,end_date;
+    private int id,amount_limit;
+    private String uuid,start_date,end_date,user_uid,category_uid;
     private int is_synced;
 
     public Budget() {
     }
 
-    public Budget(int user_id, int category_id, int amount_limit, String uuid, String start_date, String end_date) {
-        this.user_id = user_id;
-        this.category_id = category_id;
+    public Budget(String user_uid, String category_uid, int amount_limit, String uuid, String start_date, String end_date) {
+        this.user_uid = user_uid;
+        this.category_uid = category_uid;
         this.amount_limit = amount_limit;
         this.uuid = uuid;
         this.start_date = start_date;
@@ -25,20 +25,20 @@ public class Budget {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getUser_uid() {
+        return user_uid;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_uid(String user_uid) {
+        this.user_uid = user_uid;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory_uid() {
+        return category_uid;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory_uid(String category_uid) {
+        this.category_uid = category_uid;
     }
 
     public int getAmount_limit() {

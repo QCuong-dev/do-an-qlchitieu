@@ -19,13 +19,13 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
     }
 
     public void saveCategory(String name, BaseFirebase.DataCallback<String> callback){
-        int idUser = sharedPrefHelper.getInt("idUser",0);
-        if(idUser == 0){
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        if(uuidUser.isEmpty()){
             callback.onFailure("Không tìm thấy User đăng nhập");
             return;
         }
 
-        if(dao.exist(idUser,"name",name)){
+        if(dao.exist(uuidUser,"name",name)){
             callback.onFailure("Tên danh mục đã tồn tại");
             return;
         }
@@ -34,7 +34,7 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
 
         Category category = new Category();
         category.setUuid(uuid);
-        category.setUser_id(idUser);
+        category.setUser_uid(uuidUser);
         category.setName(name);
 
         long result = dao.insert(category);

@@ -3,7 +3,7 @@ package com.example.qlchitieu.model;
 public class Category {
     private int id;
     private String uuid;
-    private int user_id;
+    private String user_uid;
     private String name;
     private int icon;
     private int is_synced;
@@ -11,17 +11,17 @@ public class Category {
     public Category() {
     }
 
-    public Category(int user_id, String name) {
-        this.user_id = user_id;
+    public Category(String user_uid, String name) {
+        this.user_uid = user_uid;
         this.name = name;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getUser_uid() {
+        return user_uid;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_uid(String user_uid) {
+        this.user_uid = user_uid;
     }
 
     public void setId(int id) {

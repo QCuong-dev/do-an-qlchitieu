@@ -10,10 +10,16 @@ import androidx.annotation.NonNull;
 import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.data.db.dao.UserDAO;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
+import com.example.qlchitieu.data.db.firebase.CategoryFirebase;
+import com.example.qlchitieu.data.db.firebase.TransactionFirebase;
 import com.example.qlchitieu.data.db.firebase.UserFirebase;
+import com.example.qlchitieu.data.db.firebase.WalletFirebase;
 import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.helpers.SharedPrefHelper;
+import com.example.qlchitieu.model.Category;
+import com.example.qlchitieu.model.Transaction;
 import com.example.qlchitieu.model.User;
+import com.example.qlchitieu.model.Wallet;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,8 +30,103 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UserController extends BaseController<User,UserDAO, UserFirebase> {
+    // Wallet
+    private final WalletFirebase walletFirebase;
+    private final WalletController walletController;
+    // Category
+    private final CategoryFirebase categoryFirebase;
+    private final CategoryController categoryController;
+    // Transaction
+    private final TransactionFirebase transactionFirebase;
+    private final TransactionController transactionController;
+
     public UserController(Context context){
         super(context, new UserDAO(DBHelper.getInstance(context).getWritableDatabase()),new UserFirebase());
+
+        // Register Controller
+        walletController = new WalletController(context);
+        categoryController = new CategoryController(context);
+        transactionController = new TransactionController(context);
+
+        // Register Firebase
+        walletFirebase = new WalletFirebase();
+        categoryFirebase = new CategoryFirebase();
+        transactionFirebase = new TransactionFirebase();
+    }
+
+    // Handle save Firebase to SQLite
+    private void saveFirebaseWalletToSQLite(Runnable next){
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        String emailUser = sharedPrefHelper.getString("emailUser","");
+
+        walletFirebase.getWhere("user_uid", uuidUser, Wallet.class, new BaseFirebase.DataCallback<List<Wallet>>() {
+            @Override
+            public void onSuccess(List<Wallet> data) {
+                if(data == null || data.isEmpty()) return;
+                Wallet wallet = data.get(0);
+                Wallet current = walletController.getWalletByUserId(uuidUser);
+
+                if(current == null){
+                    walletController.insert(wallet);
+                }
+                next.run();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.e("DONVAU_ERROR","Cannot get data Wallet from Firebase: " + message);
+            }
+        });
+    } // Wallet
+    private void saveFirebaseCategoryToSQLite(Runnable next){
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+
+        categoryFirebase.getWhere("user_uid", uuidUser, Category.class, new BaseFirebase.DataCallback<List<Category>>() {
+            @Override
+            public void onSuccess(List<Category> data) {
+                if(data == null || data.isEmpty()) return;
+                for(Category c : data){
+                    categoryController.insert(c);
+                }
+                next.run();
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.e("DONVAU_ERROR","Cannot get data Category from Firebase: " + message);
+            }
+        });
+    } // Category
+    private void saveFirebaseTransactionToSQLite(){
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        Wallet wallet = walletController.getWalletByUserId(uuidUser);
+        if(wallet == null) return;
+        String uidWallet = wallet.getUuid();
+
+        transactionFirebase.getWhere("wallet_uid", uidWallet, Transaction.class, new BaseFirebase.DataCallback<List<Transaction>>() {
+            @Override
+            public void onSuccess(List<Transaction> data) {
+                if(data == null || data.isEmpty()) return;
+                for(Transaction t : data){
+                    transactionController.insert(t);
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Log.e("DONVAU_ERROR","Cannot get data Transaction from Firebase: " + message);
+            }
+        });
+    } // Transaction
+    // End
+
+    // Handle save Firebase to SQLite
+    public void saveFirebaseToSQLite() {
+        boolean isFirstLogin = sharedPrefHelper.getBoolean("isFirstLogin",false);
+        if(!isFirstLogin) return;
+        sharedPrefHelper.saveBoolean("isFirstLogin",false);
+
+        saveFirebaseWalletToSQLite(()->saveFirebaseCategoryToSQLite(()->saveFirebaseTransactionToSQLite()));
     }
 
     // Handle Login
@@ -167,6 +268,7 @@ public class UserController extends BaseController<User,UserDAO, UserFirebase> {
         sharedPrefHelper.saveString("nameUser",user.getName());
         sharedPrefHelper.saveString("emailUser", user.getEmail());
         sharedPrefHelper.saveInt("idUser",user.getId());
+        sharedPrefHelper.saveString("uuidUser",user.getUuid());
         sharedPrefHelper.saveString("createdAt",helper.convertDate(user.getCreatedAt()));
         sharedPrefHelper.saveString("ageUser",user.getAge());
         sharedPrefHelper.saveBoolean("isLogin",true);

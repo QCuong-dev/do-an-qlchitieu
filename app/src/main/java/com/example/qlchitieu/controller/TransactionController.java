@@ -27,21 +27,21 @@ public class TransactionController extends BaseController<Transaction, Transacti
         this.walletController = walletController;
     }
 
-    public void saveTransaction(int amount,int categoryId, String note, String date,String time, String type, BaseFirebase.DataCallback<String> callback){
+    public void saveTransaction(int amount,String categoryUid, String note, String date,String time, String type, BaseFirebase.DataCallback<String> callback){
         if(walletController == null) walletController = new WalletController(context);
 
         Transaction transaction = new Transaction();
         String uuid = UUID.randomUUID().toString();
-        int idUser = sharedPrefHelper.getInt("idUser",0);
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
 
         // Check had login
-        if(idUser <= 0){
+        if(uuidUser.isEmpty()){
             callback.onFailure("Vui lòng đăng nhập trước khi thực hiện giao dịch");
             return;
         }
 
         // Check had wallet
-        Wallet wallet = walletController.getWalletByUserId(idUser);
+        Wallet wallet = walletController.getWalletByUserId(uuidUser);
         if(wallet == null){
             callback.onFailure("Vui lòng tạo ví trước khi thực hiện giao dịch");
             return;
@@ -69,8 +69,8 @@ public class TransactionController extends BaseController<Transaction, Transacti
         transaction.setType(type);
         transaction.setNote(note);
         transaction.setDate(helper.convertDateFormatQuery(date) + ":" + time);
-        transaction.setCategory_id(categoryId);
-        transaction.setWallet_id(wallet.getId());
+        transaction.setCategory_uid(categoryUid);
+        transaction.setWallet_uid(wallet.getUuid());
         transaction.setAmount(amount);
         transaction.setCreated_at(helper.getCurrentDate());
         long result = dao.insert(transaction);
@@ -96,20 +96,20 @@ public class TransactionController extends BaseController<Transaction, Transacti
     }
 
     public List<Transaction> getListByDate(String date){
-        int idUser = sharedPrefHelper.getInt("idUser",0);
-        if(idUser == 0) return null;
+        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        if(uuidUser.isEmpty()) return null;
 
         if(walletController == null) walletController = new WalletController(context);
-        Wallet wallet = walletController.getWalletByUserId(idUser);
+        Wallet wallet = walletController.getWalletByUserId(uuidUser);
         if(wallet == null){
             return null;
         }
 
-        return dao.getListByDate(date,wallet.getId());
+        return dao.getListByDate(date,wallet.getUuid());
     }
 
-    public List<Transaction> getListByIdWallet(int idWallet){
-        return dao.getListByIdWallet(idWallet);
+    public List<Transaction> getListByIdWallet(String uidWallet){
+        return dao.getListByIdWallet(uidWallet);
     }
 
     public List<Transaction> getListByMonth(String date, boolean isGroup){

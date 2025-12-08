@@ -176,7 +176,7 @@ public class AddChitieuActivity extends AppCompatActivity {
         }
 
         // Tạo một thông báo Toast để hiển thị kết quả
-        transactionController.saveTransaction(Integer.parseInt(amountString), Integer.parseInt(category), note, date, time, binding.snpOption.getSelectedItem().toString(), new BaseFirebase.DataCallback<String>() {
+        transactionController.saveTransaction(Integer.parseInt(amountString), category, note, date, time, binding.snpOption.getSelectedItem().toString(), new BaseFirebase.DataCallback<String>() {
             @Override
             public void onSuccess(String data) {
                 Toast.makeText(AddChitieuActivity.this, data, Toast.LENGTH_SHORT).show();
@@ -262,7 +262,7 @@ public class AddChitieuActivity extends AppCompatActivity {
         Chip newChip = itemBinding.getRoot();
 
         newChip.setText(category.getName());
-        newChip.setTag(category.getId());
+        newChip.setTag(category.getUuid());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
             newChip.setId(View.generateViewId());

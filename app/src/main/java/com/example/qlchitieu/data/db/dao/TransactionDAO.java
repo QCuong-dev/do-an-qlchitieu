@@ -30,8 +30,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
     protected ContentValues getContentValues(Transaction transaction) {
         ContentValues values = new ContentValues();
         values.put("uuid", transaction.getUuid());
-        values.put("wallet_id",transaction.getWallet_id());
-        values.put("category_id",transaction.getCategory_id());
+        values.put("wallet_uid",transaction.getWallet_uid());
+        values.put("category_uid",transaction.getCategory_uid());
         values.put("amount",transaction.getAmount());
         values.put("note",transaction.getNote());
         values.put("date",transaction.getDate());
@@ -46,8 +46,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         Transaction transaction = new Transaction();
         transaction.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
         transaction.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
-        transaction.setWallet_id(cursor.getInt(cursor.getColumnIndexOrThrow("wallet_id")));
-        transaction.setCategory_id(cursor.getInt(cursor.getColumnIndexOrThrow("category_id")));
+        transaction.setWallet_uid(cursor.getString(cursor.getColumnIndexOrThrow("wallet_uid")));
+        transaction.setCategory_uid(cursor.getString(cursor.getColumnIndexOrThrow("category_uid")));
         transaction.setAmount(cursor.getFloat(cursor.getColumnIndexOrThrow("amount")));
         transaction.setNote(cursor.getString(cursor.getColumnIndexOrThrow("note")));
         transaction.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
@@ -61,8 +61,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         Transaction transaction = new Transaction();
         transaction.setId(cursor.getInt(cursor.getColumnIndexOrThrow("transaction_id")));
         transaction.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
-        transaction.setWallet_id(cursor.getInt(cursor.getColumnIndexOrThrow("wallet_id")));
-        transaction.setCategory_id(cursor.getInt(cursor.getColumnIndexOrThrow("category_id")));
+        transaction.setWallet_uid(cursor.getString(cursor.getColumnIndexOrThrow("wallet_uid")));
+        transaction.setCategory_uid(cursor.getString(cursor.getColumnIndexOrThrow("category_uid")));
         transaction.setAmount(cursor.getFloat(cursor.getColumnIndexOrThrow("amount")));
         transaction.setNote(cursor.getString(cursor.getColumnIndexOrThrow("note")));
         transaction.setDate(cursor.getString(cursor.getColumnIndexOrThrow("date")));
@@ -76,8 +76,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
 
-    public List<Transaction> getListByDate(String date, int idWallet){
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.is_synced, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_id = C.id WHERE SUBSTR(T.date, 1, 10) = ? AND wallet_id = ?", new String[]{date,String.valueOf(idWallet)});
+    public List<Transaction> getListByDate(String date, String uidWallet){
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.is_synced, T.uuid, T.wallet_uid, T.category_uid, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_uid = C.uuid WHERE SUBSTR(T.date, 1, 10) = ? AND wallet_uid = ?", new String[]{date,uidWallet});
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
@@ -90,8 +90,8 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         return list;
     }
 
-    public List<Transaction> getListByIdWallet(int idWallet) {
-        Cursor cursor = db.query(getTableName(),null,"wallet_id = ?",new String[]{String.valueOf(idWallet)},null,null,null,null);
+    public List<Transaction> getListByIdWallet(String uidWallet) {
+        Cursor cursor = db.query(getTableName(),null,"wallet_uid = ?",new String[]{uidWallet},null,null,null,null);
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
@@ -109,9 +109,9 @@ public class TransactionDAO extends BaseDAO<Transaction> {
         String yearString = date.split("-")[0];
         String groupBy = isGroup ? "GROUP BY category_name":"";
 
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_id, T.category_id, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name " +
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_uid, T.category_uid, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name " +
                 "FROM `Transaction` T " +
-                "JOIN `Category` C ON T.category_id = C.id " +
+                "JOIN `Category` C ON T.category_uid = C.uuid " +
                 "WHERE strftime('%Y-%m', SUBSTR(T.date,1,10)) = ? " +
                 groupBy, new String[]{yearString + "-" + monthString});
         List<Transaction> list = new ArrayList<>();

@@ -25,7 +25,7 @@ public class WalletDAO extends BaseDAO<Wallet> {
     protected ContentValues getContentValues(Wallet wallet) {
         ContentValues values = new ContentValues();
         values.put("uuid", wallet.getUuid());
-        values.put("user_id",wallet.getUser_id());
+        values.put("user_uid",wallet.getUser_uid());
         values.put("wallet_name",wallet.getWallet_name());
         values.put("balance",wallet.getBalance());
         values.put("currency",wallet.getCurrency());
@@ -38,7 +38,7 @@ public class WalletDAO extends BaseDAO<Wallet> {
         Wallet wallet = new Wallet();
         wallet.setId(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
         wallet.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
-        wallet.setUser_id(cursor.getInt(cursor.getColumnIndexOrThrow("user_id")));
+        wallet.setUser_uid(cursor.getString(cursor.getColumnIndexOrThrow("user_uid")));
         wallet.setWallet_name(cursor.getString(cursor.getColumnIndexOrThrow("wallet_name")));
         wallet.setBalance(cursor.getInt(cursor.getColumnIndexOrThrow("balance")));
         wallet.setCurrency(cursor.getString(cursor.getColumnIndexOrThrow("currency")));
@@ -46,8 +46,8 @@ public class WalletDAO extends BaseDAO<Wallet> {
         return wallet;
     }
 
-    public Wallet getWalletByUserId(int idUser){
-        Cursor cursor = db.query(getTableName(),null,"user_id = ?",new String[]{String.valueOf(idUser)},null,null,null,null);
+    public Wallet getWalletByUserId(String uidUser){
+        Cursor cursor = db.query(getTableName(),null,"user_uid = ?",new String[]{uidUser},null,null,null,null);
         if(cursor.moveToFirst()){
             return parseCursor(cursor);
         }

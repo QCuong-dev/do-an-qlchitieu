@@ -1,8 +1,8 @@
 package com.example.qlchitieu.model;
 
 public class Transaction {
-    private int id,wallet_id,category_id;
-    private String uuid,note,date,type,created_at;
+    private int id;
+    private String uuid,note,date,type,created_at,wallet_uid,category_uid;
     private float amount;
     private int is_synced;
 
@@ -11,9 +11,9 @@ public class Transaction {
 
     public Transaction(){}
 
-    public Transaction(int wallet_id, int category_id, String uuid, String note, String date, String type, float amount) {
-        this.wallet_id = wallet_id;
-        this.category_id = category_id;
+    public Transaction(String wallet_uid, String category_uid, String uuid, String note, String date, String type, float amount) {
+        this.wallet_uid = wallet_uid;
+        this.category_uid = category_uid;
         this.uuid = uuid;
         this.note = note;
         this.date = date;
@@ -29,20 +29,20 @@ public class Transaction {
         this.id = id;
     }
 
-    public int getWallet_id() {
-        return wallet_id;
+    public String getWallet_uid() {
+        return wallet_uid;
     }
 
-    public void setWallet_id(int wallet_id) {
-        this.wallet_id = wallet_id;
+    public void setWallet_uid(String wallet_uid) {
+        this.wallet_uid = wallet_uid;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public String getCategory_uid() {
+        return category_uid;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory_uid(String category_uid) {
+        this.category_uid = category_uid;
     }
 
     public String getUuid() {
