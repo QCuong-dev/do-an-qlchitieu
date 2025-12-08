@@ -26,5 +26,22 @@
         android:layout_height="wrap_content"
 
         android:layout_alignParentBottom="true" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddTransaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/bottomNavigation"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+
+        android:src="@drawable/ic_add"
+        android:contentDescription="Thêm chi tiêu"
+
+        app:backgroundTint="#FF6F00"
+        app:tint="#FFFFFF"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        app:borderWidth="0dp"/>
 
 </RelativeLayout>

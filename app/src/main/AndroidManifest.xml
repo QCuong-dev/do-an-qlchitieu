@@ -19,11 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QLChiTieu">
         <activity
+            android:name=".Activites.SyncDataActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activites.AddBudgetActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activites.AddEditWalletActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activites.HistoryActivity"
             android:exported="false" />
@@ -50,12 +53,18 @@
             android:exported="false" />
         <activity
             android:name=".Activites.AddChitieuActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activites.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".Activites.SigninActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddCategorySheet"
+            android:exported="false" />
+        <activity
+            android:name=".Activites.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,12 +72,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AddCategorySheet"
-            android:exported="false" />
-        <activity
-            android:name=".Activites.MainActivity"
-            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
