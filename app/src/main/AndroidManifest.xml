@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QLChiTieu">
         <activity
+            android:name=".Activites.OverviewWalletActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activites.SyncDataActivity"
             android:exported="false" />
         <activity

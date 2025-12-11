@@ -6,4 +6,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="fully_transparent">#00000000</color>
+    <color name="bg_screen">#F5F7FA</color> <color name="bg_card">#FFFFFF</color>   <color name="text_primary">#1A1A1A</color>   <color name="text_secondary">#757575</color> <color name="accent_green">#2E7D32</color>   <color name="accent_yellow">#F9A825</color>  <color name="card_notification_bg">#E3F2FD</color> <color name="bg_badge_date">#EEEEEE</color>
 </resources>

@@ -108,7 +108,7 @@ public class SettingFragment extends Fragment {
     // ... (Giữ nguyên các hàm showLogoutConfirmationDialog và loadUserData) ...
 
     private void loadUserData() {
-        tvUserName.setText(sharedPrefHelper.getString("nameUser",""));
+//        tvUserName.setText(sharedPrefHelper.getString("nameUser",""));
         tvMonthlyAmount.setText(walletController.getWallet() + " VND");
     }
 }
