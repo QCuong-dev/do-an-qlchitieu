@@ -119,13 +119,11 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
         binding.btnBack.setAlpha(1.0f);
         binding.btnNext.setAlpha(1.0f);
-
         // --- KHỞI TẠO DANH SÁCH GIAO DỊCH ---
         createMockTransactions();
         initTransactionRecyclerView(); // Khởi tạo RecyclerView cho giao dịch
 
         setMonthView(); // Hiển thị lịch
-
         // --- CẬP NHẬT DANH SÁCH LẦN ĐẦU ---
         updateTransactionList(selectedDate);
     }

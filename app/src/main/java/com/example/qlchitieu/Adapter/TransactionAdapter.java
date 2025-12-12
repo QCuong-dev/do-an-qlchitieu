@@ -2,6 +2,7 @@ package com.example.qlchitieu.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +41,13 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @NonNull
     @Override
-    public TransactionAdapter.TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_transaction, parent, false);
         return new TransactionViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TransactionAdapter.TransactionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TransactionViewHolder holder, int position) {
         Transaction transaction = transactionList.get(position);
 
         holder.tvCategoryName.setText(transaction.getCategoryName());

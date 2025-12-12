@@ -43,7 +43,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "wallet_name TEXT NOT NULL, " +
                 "balance REAL NOT NULL DEFAULT 0, " +
                 "currency TEXT NOT NULL DEFAULT 'VND', " +
-                "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(user_uid) REFERENCES User(uuid) ON DELETE CASCADE" +
                 ");");
 
@@ -54,7 +53,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "user_uid TEXT NOT NULL, " +
                 "name TEXT NOT NULL, " +
                 "icon INTEGER, " +
-                "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(user_uid) REFERENCES User(uuid) ON DELETE CASCADE" +
                 ");");
 
@@ -69,7 +67,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "date TEXT NOT NULL, " +
                 "type TEXT CHECK (type IN ('income', 'expense')) NOT NULL, " +
                 "created_at TEXT DEFAULT CURRENT_DATE, " +
-                "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(wallet_uid) REFERENCES Wallet(uuid) ON DELETE CASCADE, " +
                 "FOREIGN KEY(category_uid) REFERENCES Category(uuid) ON DELETE CASCADE" +
                 ");");
@@ -83,7 +80,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "amount_limit REAL NOT NULL, " +
                 "start_date TEXT NOT NULL, " +
                 "end_date TEXT NOT NULL, " +
-                "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(user_uid) REFERENCES User(uuid) ON DELETE CASCADE, " +
                 "FOREIGN KEY(category_uid) REFERENCES Category(uuid) ON DELETE CASCADE" +
                 ");");
@@ -95,7 +91,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "transaction_uid TEXT NOT NULL, " +
                 "file_path TEXT NOT NULL, " +
                 "created_at TEXT DEFAULT CURRENT_DATE, " +
-                "is_synced INTEGER DEFAULT 0, " +
                 "FOREIGN KEY(transaction_uid) REFERENCES `Transaction`(uuid) ON DELETE CASCADE" +
                 ");");
     }

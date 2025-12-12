@@ -37,7 +37,15 @@ public class CategoryStatAdapter extends RecyclerView.Adapter<CategoryStatAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        // Bước 1: Lấy LayoutInflater từ context của ViewGroup (parent)
+        android.view.LayoutInflater inflater = android.view.LayoutInflater.from(parent.getContext());
+
+        // Bước 2: "Thổi phồng" layout cho một item.
+        // Hãy đảm bảo bạn có một file layout tên là "item_category_stat.xml" (hoặc tên khác) trong thư mục res/layout.
+        View view = inflater.inflate(R.layout.item_category_stat, parent, false);
+
+        // Bước 3: Tạo và trả về một ViewHolder mới từ view vừa tạo
+        return new ViewHolder(view);
     }
 
     @Override
