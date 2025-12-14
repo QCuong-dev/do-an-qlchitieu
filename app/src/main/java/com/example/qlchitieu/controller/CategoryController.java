@@ -20,12 +20,8 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
 
     public void saveCategory(String name, BaseFirebase.DataCallback<String> callback){
         String uuidUser = sharedPrefHelper.getString("uuidUser","");
-        if(uuidUser.isEmpty()){
-            callback.onFailure("Không tìm thấy User đăng nhập");
-            return;
-        }
 
-        if(dao.exist(uuidUser,"name",name)){
+        if(dao.exist("name",name)){
             callback.onFailure("Tên danh mục đã tồn tại");
             return;
         }
@@ -45,19 +41,19 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
         }
 
         category.setId((int) result);
-
+        callback.onSuccess("Thêm danh mục thành công");
         // Firestore
-        fBase.addDocument(uuid, category, new BaseFirebase.DataCallback<String>() {
-            @Override
-            public void onSuccess(String data) {
-                callback.onSuccess("Thêm danh mục thành công");
-            }
-
-            @Override
-            public void onFailure(String message) {
-                callback.onFailure(message);
-            }
-        });
+//        fBase.addDocument(uuid, category, new BaseFirebase.DataCallback<String>() {
+//            @Override
+//            public void onSuccess(String data) {
+//                callback.onSuccess("Thêm danh mục thành công");
+//            }
+//
+//            @Override
+//            public void onFailure(String message) {
+//                callback.onFailure(message);
+//            }
+//        });
     }
 
     public void deleteCategory(int idCategory,BaseFirebase.DataCallback<String> callback){
@@ -68,19 +64,26 @@ public class CategoryController extends BaseController<Category,CategoryDAO, Cat
             return;
         }
 
+        int result = dao.delete("id = ?",new String[]{String.valueOf(idCategory)});
+        callback.onSuccess("Xóa danh mục thành công");
         // Delete in firebase
-        fBase.deleteDocument(category.getUuid(), new BaseFirebase.DataCallback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                int result = dao.delete("id = ?",new String[]{String.valueOf(idCategory)});
-                callback.onSuccess("Xóa danh mục thành công");
-            }
-
-            @Override
-            public void onFailure(String message) {
-                callback.onFailure("Lỗi khi xóa danh mục");
-            }
-        });
+//        fBase.deleteDocument(category.getUuid(), new BaseFirebase.DataCallback<Void>() {
+//            @Override
+//            public void onSuccess(Void data) {
+//                callback.onSuccess("Xóa danh mục thành công");
+//            }
+//
+//            @Override
+//            public void onFailure(String message) {
+//                callback.onFailure("Lỗi khi xóa danh mục");
+//            }
+//        });
     }
 
+    public String getCategoryUidByName(String name) {
+        if(!dao.exist("name", name)){
+            return null;
+        }
+        return dao.getBy("name", name).getUuid();
+    }
 }

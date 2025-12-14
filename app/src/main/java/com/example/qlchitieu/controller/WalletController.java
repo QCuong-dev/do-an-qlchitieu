@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class WalletController extends BaseController<Wallet, WalletDAO, WalletFirebase> {
     private final TransactionController transactionController;
+
     public WalletController(Context context) {
         super(context, new WalletDAO(DBHelper.getInstance(context).getWritableDatabase()), new WalletFirebase());
         this.transactionController = new TransactionController(context);
@@ -22,71 +23,66 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
         this.transactionController.setWalletController(this);
     }
 
-    public String getWallet(){
-        String uuidUser = sharedPrefHelper.getString("uuidUser","");
-        if(uuidUser.isEmpty()) return "0";
-
-        Wallet wallet = dao.getBy("user_uid",uuidUser);
-        if(wallet == null) return "0";
+    public String getWallet() {
+        Wallet wallet = dao.getBy("wallet_name", "Normal Wallet");
+        if (wallet == null) return "0";
 
         // Get balance from transaction
         int result = 0;
-        for(Transaction t : transactionController.getListByIdWallet(wallet.getUuid())){
-            if(t.getType().equals("income")){
-                result += (int)t.getAmount();
-            }else{
-                result -= (int)t.getAmount();
+        for (Transaction t : transactionController.getListByIdWallet(wallet.getUuid())) {
+            if (t.getType().equals("income")) {
+                result += (int) t.getAmount();
+            } else {
+                result -= (int) t.getAmount();
             }
         }
 
         return helper.formatCurrency((wallet.getBalance() + result));
     }
 
-    public String getCurrentWallet(){
-        String uuidUser = sharedPrefHelper.getString("uuidUser","");
-        if(uuidUser.isEmpty()) return "0";
-
-        Wallet wallet = dao.getBy("user_uid",uuidUser);
-        if(wallet == null) return "0";
+    public String getCurrentWallet() {
+        Wallet wallet = dao.getBy("wallet_name", "Normal Wallet");
+        if (wallet == null) return "0";
 
         return helper.formatCurrency((wallet.getBalance()));
     }
 
-    public void saveWallet(int balance, String currency, BaseFirebase.DataCallback<String> callback){
+    public void saveWallet(int balance, String currency, BaseFirebase.DataCallback<String> callback) {
         Wallet wallet = new Wallet();
         String uuid = UUID.randomUUID().toString();
-        String uuidUser = sharedPrefHelper.getString("uuidUser","");
+        String uuidUser = sharedPrefHelper.getString("uuidUser", "");
 
         // Handle valiadate
-        if(uuidUser.isEmpty()){
-            callback.onFailure("Không tìm thấy User đăng nhập");
-            return;
-        }
+//        if(uuidUser.isEmpty()){
+//            callback.onFailure("Không tìm thấy User đăng nhập");
+//            return;
+//        }
 
         // Check user had create wallet
-        if(dao.exist("user_uid",uuidUser)){
-            wallet = dao.getBy("user_uid",uuidUser);
+        if (dao.exist("wallet_name", "Normal Wallet")) {
+            wallet = dao.getBy("wallet_name", "Normal Wallet");
             wallet.setBalance(balance);
             // Update
-            int result = dao.update(wallet,"user_uid = ?",new String[]{uuidUser});
-            if(result <= 0){
+            int result = dao.update(wallet, "wallet_name = ?", new String[]{"Normal Wallet"});
+            if (result <= 0) {
                 callback.onFailure("Lỗi khi cập nhật ví vào CSDL");
                 return;
             }
 
-            fBase.updateDocument(uuid, wallet, new BaseFirebase.DataCallback<Void>() {
-                @Override
-                public void onSuccess(Void data) {
-                    callback.onSuccess("Cập nhật ví thành công");
-                }
+            callback.onSuccess("Cập nhật ví thành công");
+//            fBase.updateDocument(uuid, wallet, new BaseFirebase.DataCallback<Void>() {
+//                @Override
+//                public void onSuccess(Void data) {
+//                    callback.onSuccess("Cập nhật ví thành công");
+//                }
+//
+//                @Override
+//                public void onFailure(String message) {
+//                    callback.onFailure("Lỗi khi cập nhật ví vào FB");
+//                }
+//            });
 
-                @Override
-                public void onFailure(String message) {
-                    callback.onFailure("Lỗi khi cập nhật ví vào FB");
-                }
-            });
-
-        }else{
+        } else {
             wallet.setUuid(uuid);
             wallet.setUser_uid(uuidUser);
             wallet.setWallet_name("Normal Wallet");
@@ -94,27 +90,36 @@ public class WalletController extends BaseController<Wallet, WalletDAO, WalletFi
             wallet.setCurrency(currency);
             // Save
             long result = dao.insert(wallet);
-            if(result <= 0) {
+            if (result <= 0) {
                 callback.onFailure("Lỗi khi lưu ví vào CSDL");
                 return;
             }
-            wallet.setId((int)result);
+            wallet.setId((int) result);
+            callback.onSuccess("Lưu ví thành công");
 
-            fBase.addDocument(uuid, wallet, new BaseFirebase.DataCallback<String>() {
-                @Override
-                public void onSuccess(String data) {
-                    callback.onSuccess("Lưu ví thành công");
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    callback.onFailure("Lỗi khi lưu ví vào FB");
-                }
-            });
+//            fBase.addDocument(uuid, wallet, new BaseFirebase.DataCallback<String>() {
+//                @Override
+//                public void onSuccess(String data) {
+//                    callback.onSuccess("Lưu ví thành công");
+//                }
+//
+//                @Override
+//                public void onFailure(String message) {
+//                    callback.onFailure("Lỗi khi lưu ví vào FB");
+//                }
+//            });
         }
     }
 
-    public Wallet getWalletByUserId(String uidUser){
+    public Wallet getWalletByUserId(String uidUser) {
         return dao.getWalletByUserId(uidUser);
+    }
+
+    public Wallet getWalletData() {
+        return dao.getBy("wallet_name", "Normal Wallet");
+    }
+
+    public void addWallet(){
+        insert(new Wallet(0, UUID.randomUUID().toString(),"","Normal Wallet","VND"));
     }
 }

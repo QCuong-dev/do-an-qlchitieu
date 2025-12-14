@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "QLCT.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 3;
     private static DBHelper instance;
     public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

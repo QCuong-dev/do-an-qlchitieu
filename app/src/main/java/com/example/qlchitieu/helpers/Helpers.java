@@ -105,4 +105,36 @@ public class Helpers {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
+
+    public static String getDayOfWeekVN(String dateStr) {
+        try {
+            SimpleDateFormat sdf =
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = sdf.parse(dateStr);
+
+            SimpleDateFormat dayFormat =
+                    new SimpleDateFormat("EEEE", new Locale("vi", "VN"));
+
+            String day = dayFormat.format(date);
+            return capitalize(day);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String formatDateVN(String dateStr) {
+        try {
+            SimpleDateFormat input =
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat output =
+                    new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            return output.format(input.parse(dateStr));
+        } catch (Exception e) {
+            return dateStr;
+        }
+    }
+
+    private static String capitalize(String s) {
+        return s.substring(0,1).toUpperCase() + s.substring(1);
+    }
 }

@@ -266,7 +266,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
 
             String message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate);
             // SỬA LỖI: Dùng requireContext()
-            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+//            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
 
             updateTransactionList(clickedDate);
         }

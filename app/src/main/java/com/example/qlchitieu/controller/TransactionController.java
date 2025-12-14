@@ -35,10 +35,10 @@ public class TransactionController extends BaseController<Transaction, Transacti
         String uuidUser = sharedPrefHelper.getString("uuidUser","");
 
         // Check had login
-        if(uuidUser.isEmpty()){
-            callback.onFailure("Vui lòng đăng nhập trước khi thực hiện giao dịch");
-            return;
-        }
+//        if(uuidUser.isEmpty()){
+//            callback.onFailure("Vui lòng đăng nhập trước khi thực hiện giao dịch");
+//            return;
+//        }
 
         // Check had wallet
         Wallet wallet = walletController.getWalletByUserId(uuidUser);
@@ -54,9 +54,11 @@ public class TransactionController extends BaseController<Transaction, Transacti
         }
         switch (type.toLowerCase()){
             case "tiền vào":
+            case "income":
                 type = "income";
                 break;
             case "tiền ra":
+            case "expense":
                 type = "expense";
                 break;
             default:
@@ -80,24 +82,25 @@ public class TransactionController extends BaseController<Transaction, Transacti
             return;
         }
         transaction.setId((int)result);
+        callback.onSuccess("Lưu giao dịch thành công");
 
         // Save firebase
-        fBase.addDocument(uuid, transaction, new BaseFirebase.DataCallback<String>() {
-            @Override
-            public void onSuccess(String data) {
-                callback.onSuccess("Lưu giao dịch thành công");
-            }
-
-            @Override
-            public void onFailure(String message) {
-                callback.onFailure("Lỗi khi lưu giao dịch vào FB");
-            }
-        });
+//        fBase.addDocument(uuid, transaction, new BaseFirebase.DataCallback<String>() {
+//            @Override
+//            public void onSuccess(String data) {
+//                callback.onSuccess("Lưu giao dịch thành công");
+//            }
+//
+//            @Override
+//            public void onFailure(String message) {
+//                callback.onFailure("Lỗi khi lưu giao dịch vào FB");
+//            }
+//        });
     }
 
     public List<Transaction> getListByDate(String date){
         String uuidUser = sharedPrefHelper.getString("uuidUser","");
-        if(uuidUser.isEmpty()) return null;
+//        if(uuidUser.isEmpty()) return null;
 
         if(walletController == null) walletController = new WalletController(context);
         Wallet wallet = walletController.getWalletByUserId(uuidUser);
@@ -114,5 +117,9 @@ public class TransactionController extends BaseController<Transaction, Transacti
 
     public List<Transaction> getListByMonth(String date, boolean isGroup){
         return dao.getListByMonth(date,isGroup);
+    }
+
+    public List<Transaction> getAllHaveCategory(){
+        return dao.getAllHaveCategory();
     }
 }

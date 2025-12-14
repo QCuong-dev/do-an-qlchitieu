@@ -29,7 +29,6 @@ public class WalletDAO extends BaseDAO<Wallet> {
         values.put("wallet_name",wallet.getWallet_name());
         values.put("balance",wallet.getBalance());
         values.put("currency",wallet.getCurrency());
-        values.put("is_synced",wallet.getIs_synced());
         return values;
     }
 
@@ -42,7 +41,6 @@ public class WalletDAO extends BaseDAO<Wallet> {
         wallet.setWallet_name(cursor.getString(cursor.getColumnIndexOrThrow("wallet_name")));
         wallet.setBalance(cursor.getInt(cursor.getColumnIndexOrThrow("balance")));
         wallet.setCurrency(cursor.getString(cursor.getColumnIndexOrThrow("currency")));
-        wallet.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return wallet;
     }
 

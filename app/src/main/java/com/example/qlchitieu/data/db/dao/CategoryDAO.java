@@ -24,7 +24,6 @@ public class CategoryDAO extends BaseDAO<Category> {
         values.put("uuid",category.getUuid());
         values.put("name",category.getName());
         values.put("user_uid",category.getUser_uid());
-        values.put("is_synced",category.getIs_synced());
         return values;
     }
 
@@ -35,24 +34,6 @@ public class CategoryDAO extends BaseDAO<Category> {
         category.setUuid(cursor.getString(cursor.getColumnIndexOrThrow("uuid")));
         category.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
         category.setUser_uid(cursor.getString(cursor.getColumnIndexOrThrow("user_uid")));
-        category.setIs_synced(cursor.getInt(cursor.getColumnIndexOrThrow("is_synced")));
         return category;
-    }
-
-    // Check category exist
-    public boolean exist(String uidUser, String column,String value){
-        String selection = column + " = ? AND user_uid = ?";
-        String[] selectionArgs = { value,String.valueOf(uidUser) };
-
-        Cursor cursor = db.query(getTableName(),null,selection,selectionArgs,null,null,null);
-        if(cursor.moveToFirst()){
-            Log.d("DONVAU::CATEGORY_EXISTS","Exist");
-            cursor.close();
-            return true;
-        }
-
-        Log.d("DONVAU::CATEGORY_EXISTS","No Exist");
-        cursor.close();
-        return false;
     }
 }

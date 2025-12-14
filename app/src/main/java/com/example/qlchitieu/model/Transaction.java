@@ -1,13 +1,15 @@
 package com.example.qlchitieu.model;
 
 public class Transaction {
-    private int id;
+    private int id,iconResId;
     private String uuid,note,date,type,created_at,wallet_uid,category_uid;
     private float amount;
     private int is_synced;
 
     // JOIN TABLE Category
     private String category_name;
+    // Some other
+    private String dayOfWeek;
 
     public Transaction(){}
 
@@ -19,6 +21,16 @@ public class Transaction {
         this.date = date;
         this.type = type;
         this.amount = amount;
+    }
+
+    public Transaction(String dayOfWeek, String date, String category_name, String note,float amount, String type, int iconResId) {
+        this.dayOfWeek = dayOfWeek;
+        this.date = date;
+        this.category_name = category_name;
+        this.note = note;
+        this.amount = amount;
+        this.type = type;
+        this.iconResId = iconResId;
     }
 
     public int getId() {
@@ -107,5 +119,21 @@ public class Transaction {
 
     public void setIs_synced(int is_synced) {
         this.is_synced = is_synced;
+    }
+
+    public int getIconResId() {
+        return iconResId;
+    }
+
+    public void setIconResId(int iconResId) {
+        this.iconResId = iconResId;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }

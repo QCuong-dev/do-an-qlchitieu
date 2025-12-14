@@ -14,8 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.qlchitieu.Adapter.MessageAdapter;
 import com.example.qlchitieu.BuildConfig;
+import com.example.qlchitieu.controller.CategoryController;
+import com.example.qlchitieu.controller.TransactionController;
+import com.example.qlchitieu.controller.WalletController;
+import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.databinding.FragmentChatboxBinding;
 import com.example.qlchitieu.model.Message;
+import com.example.qlchitieu.model.Transaction;
+import com.example.qlchitieu.model.Wallet;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.Content;
@@ -25,8 +31,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.FutureCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 
 /**
@@ -50,6 +60,8 @@ public class ChatboxFragment extends Fragment {
     private List<Message> messageList;
     private MessageAdapter messageAdapter;
     private GenerativeModelFutures generativeModel;
+    TransactionController transactionController;
+    WalletController walletController;
 
 
     public ChatboxFragment() {
@@ -98,6 +110,8 @@ public class ChatboxFragment extends Fragment {
         messageAdapter = new MessageAdapter(messageList);
         binding.recyclerViewChat.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerViewChat.setAdapter(messageAdapter);
+        transactionController = new TransactionController(getContext());
+        walletController = new WalletController(getContext());
 
         // 2. Khởi tạo Gemini
         // Lấy API key từ BuildConfig
@@ -119,8 +133,86 @@ public class ChatboxFragment extends Fragment {
             binding.editTextPrompt.setText(""); // Xóa input
 
             // Gọi API Gemini
-            callGeminiApi(prompt);
+            callGeminiApi(buildSystemPrompt(prompt));
         });
+    }
+
+    private String buildTransactionContext(List<Transaction> list){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("- Danh sách giao dịch:\n");
+        for(Transaction t : list){
+            sb.append("- Ngày: ").append(t.getDate())
+                    .append(", Danh mục: ").append(t.getCategory_name())
+                    .append(", Ghi chú: ").append(t.getNote())
+                    .append(", Sốtiền: ").append(t.getAmount())
+                    .append(", Loại: ").append(t.getType().equals("income") ? "Thu nhập" : "Chi tiêu")
+                    .append("\n");
+        }
+        return sb.toString();
+    }
+
+    private String buildSystemPrompt(String userQuestion) {
+        // Check wallet
+        Wallet wallet = walletController.getWalletData();
+        if(wallet == null){
+            walletController.addWallet();
+            wallet = walletController.getWalletData();
+        }
+
+        List<Transaction> list =
+                transactionController.getAllHaveCategory();
+
+
+        String dataContext = buildTransactionContext(list);
+
+        return
+                "Giới thiệu:\n" +
+                "- Bạn là trợ lý AI quản lý chi tiêu cá nhân.\n" +
+                "- Dữ liệu được lấy từ ứng dụng quản lý chi tiêu offline.\n" +
+                "- Nếu danh mục chưa tồn tại, vẫn trả tên danh mục để hệ thống tự xử lý.\n" +
+                "- Hãy trả lời ngắn gọn, dễ hiểu bằng tiếng Việt.\n\n" +
+
+                "Dữ liệu hiện tại:\n" +
+                dataContext + "\n" +
+                "- Ví hiện tại: " + wallet.getBalance() + " VND\n" +
+
+                "Nhiệm vụ:\n" +
+                "- Nếu người dùng muốn THÊM giao dịch, hãy trích xuất thông tin và trả về JSON.\n" +
+                "- Nếu không phải thêm giao dịch, trả lời bình thường.\n\n" +
+
+                "Định dạng JSON bắt buộc khi thêm giao dịch:\n" +
+                "{\n" +
+                "  \"action\": \"add_transaction\",\n" +
+                "  \"note\": \"\",\n" +
+                "  \"category\": \"\",\n" +
+                "  \"amount\": 0,\n" +
+                "  \"type\": \"income | expense\",\n" +
+                "  \"date\": \"yyyy-MM-dd\"\n" +
+                "  \"time\": \"HH:mm\"\n" +
+                "}\n\n" +
+
+                "Luật:\n" +
+                "- Việc thêm 'Ví' vào là tổng chi tiêu một tháng của người dùng bạn dựa vào đó để đưa ra lời khuyên hợp lí dựa trên các giao dịch" +
+                "- Chỉ trả JSON nếu là hành động thêm giao dịch.\n" +
+                "- Không giải thích thêm ngoài JSON.\n\n" +
+                "Luật bắt buộc:\n" +
+                "- Nếu là thêm giao dịch, CHỈ trả về JSON thuần.\n" +
+                "- KHÔNG markdown\n" +
+                "- KHÔNG giải thích\n" +
+                "- KHÔNG text trước hoặc sau\n" +
+                "- KHÔNG emoji\n" +
+                "Câu hỏi người dùng:\n" +
+                userQuestion;
+    }
+
+    private String extractJson(String text) {
+        int start = text.indexOf("{");
+        int end = text.lastIndexOf("}");
+        if (start != -1 && end != -1 && end > start) {
+            return text.substring(start, end + 1);
+        }
+        return null;
     }
 
     private void callGeminiApi(String prompt) {
@@ -135,21 +227,14 @@ public class ChatboxFragment extends Fragment {
         Futures.addCallback(future, new FutureCallback<GenerateContentResponse>() {
             @Override
             public void onSuccess(GenerateContentResponse result) {
-                // Lấy tin nhắn cuối cùng (là tin nhắn "đang gõ...")
-                int lastMessageIndex = messageList.size() - 1;
-                Message typingMessage = messageList.get(lastMessageIndex);
-
-                // Cập nhật tin nhắn đó bằng nội dung thật từ Gemini
                 String botResponse = result.getText();
+                Log.d("AI_RAW", botResponse);
+                String json = extractJson(botResponse);
 
-                // Cập nhật trên UI Thread
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        // Sửa tin nhắn "đang gõ..." thành tin nhắn thật
-                        messageList.set(lastMessageIndex, new Message(botResponse, false));
-                        messageAdapter.notifyItemChanged(lastMessageIndex);
-                        binding.recyclerViewChat.smoothScrollToPosition(lastMessageIndex);
-                    });
+                if(json != null){
+                    handleAiCommand(json);
+                }else{
+                    updateBotMessage(botResponse);
                 }
             }
 
@@ -169,6 +254,112 @@ public class ChatboxFragment extends Fragment {
                 }
             }
         }, Executors.newSingleThreadExecutor()); // Chạy trên một thread riêng
+    }
+
+    void handleAiCommand(String json){
+        try {
+            JSONObject obj = new JSONObject(json);
+            String action = obj.optString("action", "");
+
+            if ("add_transaction".equals(action)) {
+                handleAddTransaction(obj);
+            } else {
+                updateBotMessage("Mình chưa hỗ trợ thao tác này.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            updateBotMessage("Mình không hiểu yêu cầu này.");
+        }
+    }
+
+    void updateBotMessage(String text){
+        // Lấy tin nhắn cuối cùng (là tin nhắn "đang gõ...")
+        int lastMessageIndex = messageList.size() - 1;
+        Message typingMessage = messageList.get(lastMessageIndex);
+
+        // Cập nhật trên UI Thread
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                // Sửa tin nhắn "đang gõ..." thành tin nhắn thật
+                messageList.set(lastMessageIndex, new Message(text, false));
+                messageAdapter.notifyItemChanged(lastMessageIndex);
+                binding.recyclerViewChat.smoothScrollToPosition(lastMessageIndex);
+            });
+        }
+    }
+
+    void handleAddTransaction(JSONObject obj) throws JSONException {
+        String categoryName = obj.getString("category");
+        int amount = (int)obj.getDouble("amount");
+        String note = obj.getString("note");
+        String date = obj.getString("date");
+        String time = obj.has("time") ? obj.getString("time") : "00:00";
+        String type = obj.getString("type"); // tiền ra / tiền vào
+
+        CategoryController categoryController =
+                new CategoryController(getContext());
+
+        TransactionController transactionController =
+                new TransactionController(getContext());
+
+        categoryController.saveCategory(categoryName, new BaseFirebase.DataCallback<String>() {
+            @Override
+            public void onSuccess(String msg) {
+                String categoryUid =
+                        categoryController.getCategoryUidByName(categoryName);
+
+                if (categoryUid != null) {
+                    saveTransaction(categoryUid);
+                } else {
+                    updateBotMessage("Không thể tạo danh mục.");
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                String categoryUid =
+                        categoryController.getCategoryUidByName(categoryName);
+
+                if (categoryUid != null) {
+                    saveTransaction(categoryUid);
+                } else {
+                    updateBotMessage("Không thể tạo danh mục.");
+                }
+            }
+
+            private void saveTransaction(String categoryUid) {
+                transactionController.saveTransaction(
+                        amount,
+                        categoryUid,
+                        note,
+                        date,
+                        time,
+                        type,
+                        new BaseFirebase.DataCallback<String>() {
+                            @Override
+                            public void onSuccess(String data) {
+                                askAiToRespondSuccess(note, amount, categoryName);
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                updateBotMessage(message);
+                            }
+                        }
+                );
+            }
+        });
+    }
+
+    private void askAiToRespondSuccess(String note, int amount, String category) {
+        String feedbackPrompt =
+                "Đã thêm giao dịch:\n" +
+                        "- " + note + "\n" +
+                        "- " + amount + " VND\n" +
+                        "- Danh mục: " + category;
+
+        updateBotMessage(feedbackPrompt);
     }
 
     // Hàm helper để thêm tin nhắn vào list và cập nhật UI

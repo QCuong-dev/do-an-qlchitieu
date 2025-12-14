@@ -1,6 +1,7 @@
 package com.example.qlchitieu.Fragment;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,10 +23,12 @@ import com.example.qlchitieu.Activites.AddChitieuActivity;
 import com.example.qlchitieu.Activites.AddEditWalletActivity;
 import com.example.qlchitieu.Activites.HoTroActivity;
 import com.example.qlchitieu.Activites.MainActivity;
+import com.example.qlchitieu.Activites.OverviewWalletActivity;
 import com.example.qlchitieu.Adapter.CategoryStatAdapter;
 import com.example.qlchitieu.R;
 import com.example.qlchitieu.controller.TransactionController;
 import com.example.qlchitieu.controller.WalletController;
+import com.example.qlchitieu.data.db.DBHelper;
 import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.model.Transaction;
 
@@ -62,7 +65,7 @@ public class HomeFragment extends Fragment {
     private ImageView btnHeadset;
 
     // Views Quick Actions (Các nút chức năng)
-    private LinearLayout btnAddWallet, btnAddChitieu, btnChatbox, btnTienIchKhac;
+    private LinearLayout btnAddWallet, btnAddChitieu, btnChatbox, btnTienIchKhac, btnBillOverview;
 
     // Views MỚI cho giao diện biểu đồ tròn
     private TabLayout tabLayoutTime;
@@ -111,7 +114,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        initDatabase();
         // 1. ÁNH XẠ VIEW
         initViews(view);
 
@@ -128,6 +131,11 @@ public class HomeFragment extends Fragment {
         loadData();
     }
 
+    void initDatabase(){
+        DBHelper dbHelper = DBHelper.getInstance(requireContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -141,6 +149,7 @@ public class HomeFragment extends Fragment {
         // Quick Actions
         btnAddWallet = view.findViewById(R.id.btnAddWallet); // Nút "Thêm chi tiêu tháng này"
         btnAddChitieu = view.findViewById(R.id.btnChitieuchitiet);
+        btnBillOverview = view.findViewById(R.id.btnBillOverview);
         btnChatbox = view.findViewById(R.id.btnChatbox);
         btnTienIchKhac = view.findViewById(R.id.btnTienichkhac);
 
@@ -358,12 +367,6 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Quick Actions
-        btnAddWallet.setOnClickListener(v -> {
-            // Chức năng: Thêm chi tiêu (Nút Income2 icon)
-            Intent intent = new Intent(getActivity(), AddChitieuActivity.class);
-            startActivity(intent);
-        });
 
         btnAddChitieu.setOnClickListener(v -> {
             // Chức năng: Chi tiêu chi tiết (Nút Budget icon) -> Chuyển tab BottomNav
@@ -385,6 +388,20 @@ public class HomeFragment extends Fragment {
                 ((MainActivity) getActivity()).showBottomNavigationTab(4, true);
             }
         });
+
+        btnAddWallet.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddEditWalletActivity.class);
+            startActivity(intent);
+        });
+
+        // MỚI THÊM: Sự kiện click vào nút Quản lý Hóa đơn
+        if (btnBillOverview != null) {
+            btnBillOverview.setOnClickListener(v -> {
+                // Chuyển sang màn hình OverviewActivity
+                Intent intent = new Intent(getActivity(), OverviewWalletActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     private boolean isDateInCurrentRange(String dateString) {
