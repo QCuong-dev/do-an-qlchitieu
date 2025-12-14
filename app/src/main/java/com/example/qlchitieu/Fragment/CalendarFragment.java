@@ -211,6 +211,18 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
         binding.calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (selectedDate == null) {
+            selectedDate = LocalDate.now();
+        }
+
+        // Tải lại dữ liệu từ database và cập nhật giao diện
+        updateTransactionList(selectedDate);
+    }
+
     private ArrayList<String> daysInMonthArray(LocalDate date) {
         ArrayList<String> daysInMonthArray = new ArrayList<>();
         YearMonth yearMonth = YearMonth.from(date);
@@ -264,7 +276,7 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
             int day = Integer.parseInt(dayText);
             LocalDate clickedDate = selectedDate.withDayOfMonth(day);
 
-            String message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate);
+//            String message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate);
             // SỬA LỖI: Dùng requireContext()
 //            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
 

@@ -71,8 +71,9 @@ public class HomeFragment extends Fragment {
     private TabLayout tabLayoutTime;
     private PieChart pieChart;
     private RecyclerView rcvCategoryDetails;
-    private TextView tvCurrentTimeRange, tvTotalExpenseChart; // Thay thế tvCurrentMonth, tvTotalExpense
+    private TextView tvCurrentTimeRange, tvTotalExpenseChart,tvMonthlyAmount; // Thay thế tvCurrentMonth, tvTotalExpense
     private ImageView ivTimePrev, ivTimeNext; // Thay thế ivMonthPrev, ivMonthNext
+
 
     // Logic thời gian
     private Calendar currentCalendar;
@@ -163,6 +164,8 @@ public class HomeFragment extends Fragment {
 
         ivTimePrev = view.findViewById(R.id.ivTimePrev);
         ivTimeNext = view.findViewById(R.id.ivTimeNext);
+
+        tvMonthlyAmount = view.findViewById(R.id.tvMonthlyAmount);
     }
 
     private void setupRecyclerView() {
@@ -247,6 +250,8 @@ public class HomeFragment extends Fragment {
         // 2. Lấy dữ liệu từ Database
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String queryDate = sdf.format(currentCalendar.getTime());
+
+        tvMonthlyAmount.setText(walletController.getWallet() + " VND");
 
         // Lấy danh sách giao dịch.
         // Controller của bạn hiện có getListByMonth.

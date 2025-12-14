@@ -155,7 +155,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thu Nhập"/>
-                    <TextView android:id="@+id/tvIncome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1.000.000 VND" android:textColor="#0000FF" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvIncome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 VND" android:textColor="#0000FF" android:textStyle="bold"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -164,7 +164,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chi Tiêu"/>
-                    <TextView android:id="@+id/tvExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-450.000 VND" android:textColor="#FF0000" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvExpense" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="-0 VND" android:textColor="#FF0000" android:textStyle="bold"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -173,7 +173,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tổng"/>
-                    <TextView android:id="@+id/tvTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="550.000 VND" android:textColor="#008000" android:textStyle="bold"/>
+                    <TextView android:id="@+id/tvTotal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 VND" android:textColor="#008000" android:textStyle="bold"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -234,26 +234,26 @@
     <!--        android:layout_gravity="center"-->
     <!--        app:maxImageSize="40dp" />-->
 
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom">-->
+    <!--    <RelativeLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="bottom">-->
 
-<!--        <com.nafis.bottomnavigation.NafisBottomNavigation-->
-<!--            android:id="@+id/bottomNavigation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:mbn_circleColor="#ffffff"-->
-<!--            app:mbn_backgroundBottomColor="#ffffff"-->
-<!--            app:mbn_countBackgroundColor="#ff6f00"-->
-<!--            app:mbn_countTextColor="#ffffff"-->
-<!--            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"-->
-<!--            app:mbn_defaultIconColor="#90a4ae"-->
-<!--            app:mbn_rippleColor="#2f424242"-->
-<!--            app:mbn_selectedIconColor="#3c415e"-->
-<!--            app:mbn_shadowColor="#1f212121"-->
-<!--            app:mbn_hasAnimation="true"-->
-<!--            />-->
-<!--    </RelativeLayout>-->
+    <!--        <com.nafis.bottomnavigation.NafisBottomNavigation-->
+    <!--            android:id="@+id/bottomNavigation"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            app:mbn_circleColor="#ffffff"-->
+    <!--            app:mbn_backgroundBottomColor="#ffffff"-->
+    <!--            app:mbn_countBackgroundColor="#ff6f00"-->
+    <!--            app:mbn_countTextColor="#ffffff"-->
+    <!--            app:mbn_countTypeface="fonts/SourceSansPro-Regular.ttf"-->
+    <!--            app:mbn_defaultIconColor="#90a4ae"-->
+    <!--            app:mbn_rippleColor="#2f424242"-->
+    <!--            app:mbn_selectedIconColor="#3c415e"-->
+    <!--            app:mbn_shadowColor="#1f212121"-->
+    <!--            app:mbn_hasAnimation="true"-->
+    <!--            />-->
+    <!--    </RelativeLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

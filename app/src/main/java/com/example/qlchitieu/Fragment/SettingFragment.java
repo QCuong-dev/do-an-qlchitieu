@@ -78,37 +78,37 @@ public class SettingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        anhXaView(view);
-        setClickListeners();
-        loadUserData();
+//        anhXaView(view);
+//        setClickListeners();
+//        loadUserData();
     }
 
-    private void anhXaView(View view) {
-        // Thông tin người dùng
-        tvUserName = view.findViewById(R.id.tvUserName);
-        ivAvatar = view.findViewById(R.id.ivAvatar);
-        tvMonthlyAmount = view.findViewById(R.id.tvMonthlyAmount);
-
-
-        // [MỚI] Ánh xạ nút Đồng bộ
-        btnSyncData = view.findViewById(R.id.btnSyncData);
-    }
-
-    private void setClickListeners() {
-
-        // [MỚI] Sự kiện click cho nút Đồng bộ dữ liệu
-        btnSyncData.setOnClickListener(v -> {
-            Log.d("SettingFragment", "Nút Đồng bộ được click.");
-            // Chuyển sang Activity xử lý Sync (QR code / Firebase)
-            Intent intent = new Intent(getActivity(), SyncDataActivity.class);
-            startActivity(intent);
-        });
-    }
+//    private void anhXaView(View view) {
+//        // Thông tin người dùng
+//        tvUserName = view.findViewById(R.id.tvUserName);
+//        ivAvatar = view.findViewById(R.id.ivAvatar);
+//        tvMonthlyAmount = view.findViewById(R.id.tvMonthlyAmount);
+//
+//
+//        // [MỚI] Ánh xạ nút Đồng bộ
+//        btnSyncData = view.findViewById(R.id.btnSyncData);
+//    }
+//
+//    private void setClickListeners() {
+//
+//        // [MỚI] Sự kiện click cho nút Đồng bộ dữ liệu
+//        btnSyncData.setOnClickListener(v -> {
+//            Log.d("SettingFragment", "Nút Đồng bộ được click.");
+//            // Chuyển sang Activity xử lý Sync (QR code / Firebase)
+//            Intent intent = new Intent(getActivity(), SyncDataActivity.class);
+//            startActivity(intent);
+//        });
+//    }
 
     // ... (Giữ nguyên các hàm showLogoutConfirmationDialog và loadUserData) ...
 
-    private void loadUserData() {
-        tvUserName.setText(sharedPrefHelper.getString("nameUser",""));
-        tvMonthlyAmount.setText(walletController.getWallet() + " VND");
-    }
+//    private void loadUserData() {
+////        tvUserName.setText(sharedPrefHelper.getString("nameUser",""));
+//        tvMonthlyAmount.setText(walletController.getWallet() + " VND");
+//    }
 }

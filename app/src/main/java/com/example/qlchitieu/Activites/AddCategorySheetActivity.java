@@ -50,7 +50,7 @@ public class AddCategorySheetActivity extends AppCompatActivity {
         categoryController = new CategoryController(this);
 
         renderCategory();
-        renderIconSelection();
+//        renderIconSelection();
 
         binding.btnSave.setOnClickListener(this::saveCategory);
         binding.ivBack.setOnClickListener(this::backToAddChitieu);
@@ -70,49 +70,49 @@ public class AddCategorySheetActivity extends AppCompatActivity {
         }
     }
 
-    private void renderIconSelection() {
-        LinearLayout llIconSelection = binding.llIconSelection;
-        llIconSelection.removeAllViews(); // Đảm bảo làm sạch layout
-
-        // Định nghĩa kích thước và margin (cần được định nghĩa trong dimens.xml)
-        int iconSize = (int) getResources().getDimension(R.dimen.icon_size);
-        int iconMargin = (int) getResources().getDimension(R.dimen.icon_margin);
-        int iconPadding = 10; // Đặt padding cố định
-
-        for (int iconId : iconDrawables) {
-            ImageView imageView = new ImageView(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(iconSize, iconSize);
-            params.setMarginEnd(iconMargin);
-
-            imageView.setLayoutParams(params);
-            imageView.setImageResource(iconId);
-
-            // Thiết lập background selector (cần được định nghĩa trong drawable)
-            imageView.setBackgroundResource(R.drawable.icon_background_selector);
-            imageView.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
-
-            // Xử lý sự kiện click
-            imageView.setOnClickListener(v -> {
-                // Đặt lại trạng thái không được chọn cho tất cả các icon
-                for (int i = 0; i < llIconSelection.getChildCount(); i++) {
-                    View child = llIconSelection.getChildAt(i);
-                    child.setSelected(false);
-                }
-
-                // Đánh dấu icon hiện tại là được chọn
-                v.setSelected(true);
-                selectedIconId = iconId;
-            });
-
-            llIconSelection.addView(imageView);
-        }
-
-        // Thiết lập icon đầu tiên là mặc định được chọn
-        if (llIconSelection.getChildCount() > 0) {
-            llIconSelection.getChildAt(0).setSelected(true);
-            selectedIconId = iconDrawables[0];
-        }
-    }
+//    private void renderIconSelection() {
+//        LinearLayout llIconSelection = binding.llIconSelection;
+//        llIconSelection.removeAllViews(); // Đảm bảo làm sạch layout
+//
+//        // Định nghĩa kích thước và margin (cần được định nghĩa trong dimens.xml)
+//        int iconSize = (int) getResources().getDimension(R.dimen.icon_size);
+//        int iconMargin = (int) getResources().getDimension(R.dimen.icon_margin);
+//        int iconPadding = 10; // Đặt padding cố định
+//
+//        for (int iconId : iconDrawables) {
+//            ImageView imageView = new ImageView(this);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(iconSize, iconSize);
+//            params.setMarginEnd(iconMargin);
+//
+//            imageView.setLayoutParams(params);
+//            imageView.setImageResource(iconId);
+//
+//            // Thiết lập background selector (cần được định nghĩa trong drawable)
+//            imageView.setBackgroundResource(R.drawable.icon_background_selector);
+//            imageView.setPadding(iconPadding, iconPadding, iconPadding, iconPadding);
+//
+//            // Xử lý sự kiện click
+//            imageView.setOnClickListener(v -> {
+//                // Đặt lại trạng thái không được chọn cho tất cả các icon
+//                for (int i = 0; i < llIconSelection.getChildCount(); i++) {
+//                    View child = llIconSelection.getChildAt(i);
+//                    child.setSelected(false);
+//                }
+//
+//                // Đánh dấu icon hiện tại là được chọn
+//                v.setSelected(true);
+//                selectedIconId = iconId;
+//            });
+//
+//            llIconSelection.addView(imageView);
+//        }
+//
+//        // Thiết lập icon đầu tiên là mặc định được chọn
+//        if (llIconSelection.getChildCount() > 0) {
+//            llIconSelection.getChildAt(0).setSelected(true);
+//            selectedIconId = iconDrawables[0];
+//        }
+//    }
 
     private void addCategoryToLayout(Category category) {
 
