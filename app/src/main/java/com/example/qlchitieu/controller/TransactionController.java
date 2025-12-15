@@ -122,4 +122,51 @@ public class TransactionController extends BaseController<Transaction, Transacti
     public List<Transaction> getAllHaveCategory(){
         return dao.getAllHaveCategory();
     }
+    public void updateTransaction(
+            int id,
+            int amount,
+            String categoryUid,
+            String note,
+            String date,
+            String time,
+            String type,
+            BaseFirebase.DataCallback<String> callback
+    ) {
+        Transaction t = dao.getById(id);
+        if (t == null) {
+            callback.onFailure("Không tìm thấy giao dịch");
+            return;
+        }
+
+        t.setAmount(amount);
+        t.setCategory_uid(categoryUid);
+        t.setNote(note);
+        t.setType(type);
+        t.setDate(helper.convertDateFormatQuery(date) + ":" + time);
+
+        int result = dao.update(t,"id = ?", new String[]{String.valueOf(id)});
+        if (result <= 0) {
+            callback.onFailure("Cập nhật thất bại");
+            return;
+        }
+
+        callback.onSuccess("Cập nhật thành công");
+    }
+
+    public void deleteTransaction(int id, BaseFirebase.DataCallback<String> callback) {
+        Transaction t = dao.getById(id);
+        if (t == null) {
+            callback.onFailure("Không tìm thấy giao dịch");
+            return;
+        }
+
+        int result = dao.delete("id = ?", new String[]{String.valueOf(id)});
+        if (result <= 0) {
+            callback.onFailure("Xoá thất bại");
+            return;
+        }
+
+        callback.onSuccess("Xoá thành công");
+    }
+
 }

@@ -146,6 +146,7 @@ public class ChatboxFragment extends Fragment {
         sb.append("- Danh sách giao dịch:\n");
         for(Transaction t : list){
             sb.append("- Ngày: ").append(t.getDate())
+                    .append(", ID (Không hiển thị cho người dùng): ").append(t.getId())
                     .append(", Danh mục: ").append(t.getCategory_name())
                     .append(", Ghi chú: ").append(t.getNote())
                     .append(", Sốtiền: ").append(t.getAmount())
@@ -202,11 +203,13 @@ public class ChatboxFragment extends Fragment {
 
                 "Nhiệm vụ:\n" +
                 "- Nếu người dùng muốn THÊM giao dịch, hãy trích xuất thông tin và trả về JSON.\n" +
+                "- Nếu người dùng muốn SỬA giao dịch → trả JSON action update_transaction\n" +
+                "- Nếu người dùng muốn XOÁ giao dịch → trả JSON action delete_transaction\n" +
                 "- Nếu không phải thêm giao dịch, trả lời bình thường.\n\n" +
 
-                "Định dạng JSON bắt buộc khi thêm giao dịch:\n" +
+                "Định dạng JSON bắt buộc khi thêm|sửa|xóa giao dịch:\n" +
                 "{\n" +
-                "  \"action\": \"add_transaction\",\n" +
+                "  \"action\": \"add_transaction|update_transaction|delete_transaction\",\n" +
                 "  \"note\": \"\",\n" +
                 "  \"category\": \"\",\n" +
                 "  \"amount\": 0,\n" +
@@ -216,6 +219,9 @@ public class ChatboxFragment extends Fragment {
                 "}\n\n" +
 
                 "Luật:\n" +
+                "- Khi UPDATE hoặc DELETE, phải xác định đúng transaction_id từ dữ liệu hiện tại\n" +
+                "- Không được đoán transaction_id\n" +
+                "- Chỉ dùng transaction_id có trong danh sách giao dịch\n\n" +
                 "- Việc thêm 'Ví' vào là tổng chi tiêu một tháng của người dùng bạn dựa vào đó để đưa ra lời khuyên hợp lí dựa trên các giao dịch" +
                 "- Chỉ trả JSON nếu là hành động thêm giao dịch.\n" +
                 "- Không giải thích thêm ngoài JSON.\n\n" +
@@ -284,12 +290,20 @@ public class ChatboxFragment extends Fragment {
             JSONObject obj = new JSONObject(json);
             String action = obj.optString("action", "");
 
-            if ("add_transaction".equals(action)) {
-                handleAddTransaction(obj);
-            } else {
-                updateBotMessage("Mình chưa hỗ trợ thao tác này.");
-            }
+            switch(action){
+                case "add_transaction":
+                    handleAddTransaction(obj);
+                    break;
+                case "update_transaction":
+                    handleUpdateTransaction(obj);
+                    break;
 
+                case "delete_transaction":
+                    handleDeleteTransaction(obj);
+                    break;
+                default:
+                    updateBotMessage("Mình chưa hỗ trợ thao tác này.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             updateBotMessage("Mình không hiểu yêu cầu này. Error: " + e.getMessage());
@@ -374,6 +388,65 @@ public class ChatboxFragment extends Fragment {
             }
         });
     }
+
+    void handleUpdateTransaction(JSONObject obj) throws JSONException {
+        int transactionId = obj.getInt("transaction_id");
+        String categoryName = obj.getString("category");
+        int amount = obj.getInt("amount");
+        String note = obj.getString("note");
+        String date = obj.getString("date");
+        String time = obj.getString("time");
+        String type = obj.getString("type");
+
+        CategoryController categoryController = new CategoryController(getContext());
+        TransactionController transactionController = new TransactionController(getContext());
+
+        String categoryUid = categoryController.getCategoryUidByName(categoryName);
+
+        transactionController.updateTransaction(
+                transactionId,
+                amount,
+                categoryUid,
+                note,
+                date,
+                time,
+                type,
+                new BaseFirebase.DataCallback<String>() {
+                    @Override
+                    public void onSuccess(String data) {
+                        updateBotMessage("Đã cập nhật giao dịch thành công");
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        updateBotMessage(message);
+                    }
+                }
+        );
+    }
+
+    void handleDeleteTransaction(JSONObject obj) throws JSONException {
+        int transactionId = obj.getInt("transaction_id");
+
+        TransactionController transactionController =
+                new TransactionController(getContext());
+
+        transactionController.deleteTransaction(
+                transactionId,
+                new BaseFirebase.DataCallback<String>() {
+                    @Override
+                    public void onSuccess(String data) {
+                        updateBotMessage("🗑 Đã xoá giao dịch");
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        updateBotMessage(message);
+                    }
+                }
+        );
+    }
+
 
     private void askAiToRespondSuccess(String note, int amount, String category) {
         String feedbackPrompt =

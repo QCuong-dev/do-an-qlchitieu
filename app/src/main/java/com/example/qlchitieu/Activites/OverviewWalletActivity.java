@@ -85,7 +85,7 @@ public class OverviewWalletActivity extends AppCompatActivity {
         originalList = new ArrayList<>();
         List<Transaction> list = transactionController.getAllHaveCategory();
         for(Transaction t : list){
-            originalList.add(new Transaction("Thứ 5",t.getDate(),t.getCategory_name(),t.getNote(),t.getAmount(),t.getType(),R.drawable.ic_bill));
+            originalList.add(new Transaction("",t.getDate(),t.getCategory_name(),t.getNote(),t.getAmount(),t.getType(),R.drawable.ic_bill));
         }
 
         // Ban đầu hiển thị toàn bộ

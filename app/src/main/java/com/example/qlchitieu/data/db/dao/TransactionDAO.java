@@ -89,7 +89,7 @@ public class TransactionDAO extends BaseDAO<Transaction> {
     }
 
     public List<Transaction> getAllHaveCategory(){
-        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_uid, T.category_uid, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_uid = C.uuid",new String[]{});
+        Cursor cursor = db.rawQuery("SELECT T.id AS transaction_id, T.uuid, T.wallet_uid, T.category_uid, T.amount, T.note, T.date, T.type, T.created_at, C.name AS category_name FROM `Transaction` T JOIN `Category` C ON T.category_uid = C.uuid ORDER BY T.date DESC",new String[]{});
         List<Transaction> list = new ArrayList<>();
 
         if(cursor.moveToFirst()){
