@@ -63,13 +63,25 @@ public class Helpers {
     public String getCurrentDate() {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
     }
+    public String getCurrentTime() {
+        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+    }
 
-    public String convertDateFormatQuery(String inputDate){
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.getDefault());
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault());
+    public String convertDateFormatQuery(String inputDate) {
+        DateTimeFormatter outputFormatter =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        LocalDate inputLocalDate = LocalDate.parse(inputDate, inputFormatter);
-        return outputFormatter.format(inputLocalDate);
+        try {
+            // Thử dd-MM-yyyy trước
+            DateTimeFormatter f1 =
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate d = LocalDate.parse(inputDate, f1);
+            return d.format(outputFormatter);
+        } catch (Exception e) {
+            // Fallback yyyy-MM-dd
+            LocalDate d = LocalDate.parse(inputDate);
+            return d.format(outputFormatter);
+        }
     }
 
     public String convertDate(String inputDate){

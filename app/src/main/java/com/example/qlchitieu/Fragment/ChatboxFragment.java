@@ -19,6 +19,7 @@ import com.example.qlchitieu.controller.TransactionController;
 import com.example.qlchitieu.controller.WalletController;
 import com.example.qlchitieu.data.db.firebase.BaseFirebase;
 import com.example.qlchitieu.databinding.FragmentChatboxBinding;
+import com.example.qlchitieu.helpers.Helpers;
 import com.example.qlchitieu.model.Message;
 import com.example.qlchitieu.model.Transaction;
 import com.example.qlchitieu.model.Wallet;
@@ -62,6 +63,7 @@ public class ChatboxFragment extends Fragment {
     private GenerativeModelFutures generativeModel;
     TransactionController transactionController;
     WalletController walletController;
+    Helpers helper;
 
 
     public ChatboxFragment() {
@@ -112,6 +114,7 @@ public class ChatboxFragment extends Fragment {
         binding.recyclerViewChat.setAdapter(messageAdapter);
         transactionController = new TransactionController(getContext());
         walletController = new WalletController(getContext());
+        helper = new Helpers(getContext());
 
         // 2. Khởi tạo Gemini
         // Lấy API key từ BuildConfig
@@ -152,6 +155,24 @@ public class ChatboxFragment extends Fragment {
         return sb.toString();
     }
 
+    private String buildConversationContext(int maxMessages) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Lịch sử hội thoại gần đây:\n");
+
+        int start = Math.max(0, messageList.size() - maxMessages);
+
+        for (int i = start; i < messageList.size(); i++) {
+            Message m = messageList.get(i);
+
+            if (m.getText().length() < 3) continue; // bỏ "ok", "uh"
+
+            sb.append(m.isUser() ? "Người dùng: " : "Trợ lý: ")
+                    .append(m.getText())
+                    .append("\n");
+        }
+        return sb.toString();
+    }
+
     private String buildSystemPrompt(String userQuestion) {
         // Check wallet
         Wallet wallet = walletController.getWalletData();
@@ -163,7 +184,7 @@ public class ChatboxFragment extends Fragment {
         List<Transaction> list =
                 transactionController.getAllHaveCategory();
 
-
+        String conversationContext = buildConversationContext(6);
         String dataContext = buildTransactionContext(list);
 
         return
@@ -173,6 +194,8 @@ public class ChatboxFragment extends Fragment {
                 "- Nếu danh mục chưa tồn tại, vẫn trả tên danh mục để hệ thống tự xử lý.\n" +
                 "- Hãy trả lời ngắn gọn, dễ hiểu bằng tiếng Việt.\n\n" +
 
+                conversationContext + "\n" +
+                "Ngày và giờ hôm nay: " + helper.getCurrentDate() + " " + helper.getCurrentTime() + "\n" +
                 "Dữ liệu hiện tại:\n" +
                 dataContext + "\n" +
                 "- Ví hiện tại: " + wallet.getBalance() + " VND\n" +
@@ -269,7 +292,7 @@ public class ChatboxFragment extends Fragment {
 
         } catch (Exception e) {
             e.printStackTrace();
-            updateBotMessage("Mình không hiểu yêu cầu này.");
+            updateBotMessage("Mình không hiểu yêu cầu này. Error: " + e.getMessage());
         }
     }
 
@@ -339,7 +362,7 @@ public class ChatboxFragment extends Fragment {
                         new BaseFirebase.DataCallback<String>() {
                             @Override
                             public void onSuccess(String data) {
-                                askAiToRespondSuccess(note, amount, categoryName);
+                                askAiToRespondSuccess(date, amount, categoryName);
                             }
 
                             @Override
