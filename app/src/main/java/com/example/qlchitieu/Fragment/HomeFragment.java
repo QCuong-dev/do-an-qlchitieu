@@ -443,4 +443,12 @@ public class HomeFragment extends Fragment {
         }
         return false;
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            loadData(); // Load lại dữ liệu biểu đồ và danh sách
+        }
+    }
 }

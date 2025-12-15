@@ -330,4 +330,18 @@ public class CalendarFragment extends Fragment implements CalendarAdapter.OnItem
                 .setIcon(android.R.drawable.ic_dialog_alert) // Biểu tượng cảnh báo
                 .show();
     }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            // Cập nhật lại ngày hiện tại nếu cần (hoặc giữ nguyên ngày đang chọn)
+            if (selectedDate == null) {
+                selectedDate = LocalDate.now();
+            }
+            // Gọi hàm load lại transaction
+            updateTransactionList(selectedDate);
+        }
+    }
 }
