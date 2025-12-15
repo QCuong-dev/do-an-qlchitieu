@@ -149,7 +149,7 @@ public class ChatboxFragment extends Fragment {
                     .append(", ID (Không hiển thị cho người dùng): ").append(t.getId())
                     .append(", Danh mục: ").append(t.getCategory_name())
                     .append(", Ghi chú: ").append(t.getNote())
-                    .append(", Sốtiền: ").append(t.getAmount())
+                    .append(", Số tiền: ").append(t.getAmount())
                     .append(", Loại: ").append(t.getType().equals("income") ? "Thu nhập" : "Chi tiêu")
                     .append("\n");
         }
@@ -216,10 +216,11 @@ public class ChatboxFragment extends Fragment {
                 "  \"type\": \"income | expense\",\n" +
                 "  \"date\": \"yyyy-MM-dd\"\n" +
                 "  \"time\": \"HH:mm\"\n" +
+               "  \"transaction_id\": (Là dữ liệu hiện tại)\n" +
                 "}\n\n" +
 
                 "Luật:\n" +
-                "- Khi UPDATE hoặc DELETE, phải xác định đúng transaction_id từ dữ liệu hiện tại\n" +
+                "- Khi UPDATE hoặc DELETE, phải xác định đúng transaction_id từ dữ liệu hiện tại, nếu người dùng không nói rõ ràng xóa cái gì thì phải hỏi rõ khi nào lúc nào và phần danh mục chi tiêu nào.\n" +
                 "- Không được đoán transaction_id\n" +
                 "- Chỉ dùng transaction_id có trong danh sách giao dịch\n\n" +
                 "- Việc thêm 'Ví' vào là tổng chi tiêu một tháng của người dùng bạn dựa vào đó để đưa ra lời khuyên hợp lí dựa trên các giao dịch" +
@@ -436,7 +437,7 @@ public class ChatboxFragment extends Fragment {
                 new BaseFirebase.DataCallback<String>() {
                     @Override
                     public void onSuccess(String data) {
-                        updateBotMessage("🗑 Đã xoá giao dịch");
+                        updateBotMessage("Đã xoá giao dịch");
                     }
 
                     @Override
